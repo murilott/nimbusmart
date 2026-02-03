@@ -1,0 +1,63 @@
+services:
+  service-discovery:
+    build:
+      context: ./service-discovery
+    container_name: service-discovery
+    ports:
+     - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+     - ./service-discovery:/app
+     - ~/.m2:/root/.m2
+    networks:
+     - app-network
+  product:
+    build:
+      context: ./product
+    container_name: product
+    ports:
+     - "8090:8080"
+    volumes:
+     - ./product:/app
+     - ~/.m2:/root/.m2
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+    networks:
+     - app-network
+  inventory:
+    build:
+      context: ./inventory
+    container_name: inventory
+    ports:
+     - "8091:8080"
+    volumes:
+     - ./inventory:/app
+     - ~/.m2:/root/.m2
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+    networks:
+     - app-network
+  gateway-service:
+    build:
+      context: ./gateway-service
+    container_name: gateway-service
+    ports:
+     - "8080:8080"
+    volumes:
+     - ./gateway-service:/app
+     - ~/.m2:/root/.m2
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+    networks:
+     - app-network
+networks:
+  app-network:
+    driver: bridge

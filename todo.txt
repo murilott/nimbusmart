@@ -1,0 +1,8 @@
+services:
+auth
+order
+payment
+inventory
+delivery
+notification
+frontend
