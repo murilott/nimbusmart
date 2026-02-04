@@ -7,9 +7,13 @@ import java.util.UUID;
 
 import com.example.inventory.domain.vo.Status;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +25,19 @@ import lombok.Setter;
 @Setter(AccessLevel.PRIVATE)
 public class Inventory {
     @Id
+    @Column(nullable = false, updatable = false)
     private UUID id;
 
+    @OneToMany(
+        mappedBy = "inventory",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
     private List<InventoryItem> items = new ArrayList<>();
 
     private OffsetDateTime createdAt;
 
+    @NotBlank(message = "Location must not be blank")
     private String location;
     
     // @Embedded
@@ -34,6 +45,7 @@ public class Inventory {
 
     public static Inventory newInventory(String location) {
         Inventory inv = new Inventory();
+        inv.setId(UUID.randomUUID());
         inv.setLocation(location);
         inv.setCreatedAt(OffsetDateTime.now());
 

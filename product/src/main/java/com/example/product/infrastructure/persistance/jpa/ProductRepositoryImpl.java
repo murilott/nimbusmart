@@ -37,5 +37,4 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Product save(Product product) {
         return jpa.save(product);
     }
-    
 }

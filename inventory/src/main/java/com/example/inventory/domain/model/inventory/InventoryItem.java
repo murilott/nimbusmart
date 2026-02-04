@@ -6,9 +6,13 @@ import java.util.UUID;
 import com.example.inventory.domain.vo.Status;
 import com.example.inventory.domain.vo.StatusType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +24,17 @@ import lombok.Setter;
 @Setter(AccessLevel.PRIVATE)
 public class InventoryItem {
     @Id
+    @Column(nullable = false, updatable = false)
     private UUID id;
 
+    @Column(nullable = false, updatable = false)
     private UUID productId;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "inventory_id")
     private Inventory inventory;
 
+    @PositiveOrZero(message = "Quantity must not be negative")
     private int quantity;
 
     private OffsetDateTime createdAt;
@@ -47,6 +57,7 @@ public class InventoryItem {
     }
 
     private InventoryItem(UUID productId, Inventory inventory, int quantity) {
+        this.setId(UUID.randomUUID());
         this.setProductId(productId);
         this.setInventory(inventory);
         this.setQuantity(quantity);
