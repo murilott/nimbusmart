@@ -1,0 +1,27 @@
+```mermaid
+classDiagram
+    class Inventory {
+        -id: UUID;
+        -items: List<InventoryItem>;
+        -createdAt: OffsetDateTime;
+        -status: Status;
+    }
+
+    class InventoryItem {
+        -id: UUID;
+        -productId: UUID;
+        -quantity: Int;
+        -status: Status;
+    }
+
+    class Status ~ValueObject~ {
+        -String value;
+        +of(value: StatusType): Status
+    }
+
+    class StatusType {
+        <<enumeraion>>
+        IN_STOCK;
+        OUT_OF_STOCK;
+    }
+```

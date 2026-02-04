@@ -2,6 +2,7 @@ services:
 auth
 order
 payment
+product
 inventory
 delivery
 notification
