@@ -1,7 +1,10 @@
 package com.example.inventory.application.services;
 
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import com.example.inventory.infrastructure.messaging.out.ProductGrpcGateway;
+import com.example.inventory.application.commands.CreateInventoryItemCommand;
 import com.example.inventory.application.ports.out.InventoryItemRepository;
 import com.example.inventory.application.ports.out.InventoryRepository;
 import com.example.inventory.domain.model.inventory.Inventory;
@@ -20,10 +23,17 @@ public class CreateInventoryItemHandler {
     private final InventoryRepository inventoryRepository;
     private final InventoryItemMapper mapper;
 
-    public InventoryItemResponseDto handle(InventoryItemCreationDto dto) {
+    private final ProductGrpcGateway productGrpcGateway;
+    // private final KafkaTemplate<String, String> kafkaTemplate;
+
+    public InventoryItemResponseDto handle(CreateInventoryItemCommand dto) {
         Inventory inventory = inventoryRepository
             .findById(dto.inventoryId())
             .orElseThrow(() -> new EntityNotFoundException("Inventory not found"));
+
+        if (!productGrpcGateway.exists(dto.productId())) {
+            throw new EntityNotFoundException("Product does not exist");
+        }
 
         InventoryItem item = InventoryItem.newItem(dto.productId(), inventory, dto.quantity());
 

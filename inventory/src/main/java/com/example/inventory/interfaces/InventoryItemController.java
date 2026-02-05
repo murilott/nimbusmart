@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.inventory.application.commands.CreateInventoryItemCommand;
 import com.example.inventory.application.services.CreateInventoryItemHandler;
 import com.example.inventory.application.services.ListInventoryHandler;
 import com.example.inventory.interfaces.rest.dto.inventoryItem.InventoryItemCreationDto;
@@ -33,7 +34,13 @@ public class InventoryItemController {
 
     @PostMapping()
     public ResponseEntity<InventoryItemResponseDto> create(@Valid @RequestBody InventoryItemCreationDto request) {
-        InventoryItemResponseDto created = createInventoryItemHandler.handle(request);
+        CreateInventoryItemCommand command = new CreateInventoryItemCommand(
+            request.productId(), 
+            request.inventoryId(), 
+            request.quantity()
+        );
+        
+        InventoryItemResponseDto created = createInventoryItemHandler.handle(command);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }

@@ -2,6 +2,7 @@ package com.example.inventory.application.services;
 
 import org.springframework.stereotype.Service;
 
+import com.example.inventory.application.commands.CreateInventoryCommand;
 import com.example.inventory.application.ports.out.InventoryRepository;
 import com.example.inventory.domain.model.inventory.Inventory;
 import com.example.inventory.interfaces.rest.dto.inventory.InventoryCreationDto;
@@ -17,7 +18,7 @@ public class CreateInventoryHandler {
     private final InventoryRepository repository;
     private final InventoryMapper mapper;
 
-    public InventoryResponseDto handle(@Valid InventoryCreationDto dto) {
+    public InventoryResponseDto handle(CreateInventoryCommand dto) {
         Inventory inventory = Inventory.newInventory(dto.location());
         Inventory savedInventory = repository.save(inventory);
 

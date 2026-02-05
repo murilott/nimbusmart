@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.product.application.commands.CreateProductCommand;
 import com.example.product.application.services.CreateProductHandler;
 import com.example.product.application.services.ListProductsHandler;
 import com.example.product.interfaces.rest.dto.ProductCreationDto;
@@ -36,7 +37,12 @@ public class ProductController {
 
     @PostMapping()
     public ResponseEntity<ProductResponseDto> create(@Valid @RequestBody ProductCreationDto request) {
-        ProductResponseDto created = createProductHandler.handle(request);
+        CreateProductCommand command = new CreateProductCommand(
+            request.title(), 
+            request.description(), 
+            request.tags()
+        );
+        ProductResponseDto created = createProductHandler.handle(command);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
