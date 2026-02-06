@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.product.grpc";
+option java_outer_classname = "ProductProto";
+
+service ProductService {
+  rpc Exists (ProductExistsRequest) returns (ProductExistsResponse);
+}
+
+message ProductExistsRequest {
+  string productId = 1;
+}
+
+message ProductExistsResponse {
+  bool exists = 1;
+}

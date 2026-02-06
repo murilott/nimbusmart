@@ -24,6 +24,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public boolean existsById(UUID id) {
+        return jpa.existsById(id);
+    }
+
+    @Override
     public List<Product> findAll() {
         return jpa.findAll();
     }

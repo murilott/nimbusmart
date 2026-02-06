@@ -1,6 +1,9 @@
 FROM eclipse-temurin:25-jdk
+
 WORKDIR /app
-COPY . .
-RUN chmod +x mvnw
+
+COPY target/inventory-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
-ENTRYPOINT ["./mvnw", "spring-boot:run"]
+
+ENTRYPOINT ["java","-jar","app.jar"]

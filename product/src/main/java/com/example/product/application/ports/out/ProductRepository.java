@@ -14,4 +14,5 @@ public interface ProductRepository {
     public List<Product> findAll();
     public Page<Product> findAll(Pageable pageable);
     public Optional<Product> findById(UUID id);
+    public boolean existsById(UUID id);
 }

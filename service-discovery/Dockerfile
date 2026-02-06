@@ -1,13 +1,11 @@
 FROM eclipse-temurin:25-jdk
 
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-COPY . .
 
-RUN apt-get update \
- && apt-get install -y curl \
- && rm -rf /var/lib/apt/lists/*
-
-RUN chmod +x mvnw
+COPY target/service-discovery-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["./mvnw", "spring-boot:run"]
+
+ENTRYPOINT ["java","-jar","app.jar"]
