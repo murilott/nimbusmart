@@ -1,5 +1,6 @@
 package com.example.inventory.domain.model.inventory;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -37,12 +38,15 @@ public class InventoryItem {
     @PositiveOrZero(message = "Quantity must not be negative")
     private int quantity;
 
+    @PositiveOrZero(message = "Price must not be negative")
+    private BigDecimal price;
+
     private OffsetDateTime createdAt;
 
     @Embedded
     private Status status;
 
-    public static InventoryItem newItem(UUID productId, Inventory inventory, int quantity) {
+    public static InventoryItem newItem(UUID productId, Inventory inventory, int quantity, BigDecimal price) {
         if (productId == null) {
             throw new IllegalArgumentException("InventoryItem must be associated with a product id");
         }
@@ -51,16 +55,17 @@ public class InventoryItem {
             throw new IllegalArgumentException("InventoryItem must be associated with an Inventory");
         }
 
-        InventoryItem item = new InventoryItem(productId, inventory, quantity);
+        InventoryItem item = new InventoryItem(productId, inventory, quantity, price);
 
         return item;
     }
 
-    private InventoryItem(UUID productId, Inventory inventory, int quantity) {
+    private InventoryItem(UUID productId, Inventory inventory, int quantity, BigDecimal price) {
         this.setId(UUID.randomUUID());
         this.setProductId(productId);
         this.setInventory(inventory);
         this.setQuantity(quantity);
+        this.setPrice(price);
         // this.setStatus(Status.of(StatusType.IN_STOCK));
         this.setCreatedAt(OffsetDateTime.now());
     }
@@ -87,6 +92,14 @@ public class InventoryItem {
         int finalQuantity = this.quantity + quantity;
 
         this.setQuantity(finalQuantity);
+    }
+
+    public void changePrice(BigDecimal newPrice) {
+        if (newPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
+
+        this.setPrice(newPrice);
     }
 
     private void setQuantity(int quantity) {

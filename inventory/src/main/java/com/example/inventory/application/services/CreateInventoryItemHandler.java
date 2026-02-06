@@ -35,7 +35,7 @@ public class CreateInventoryItemHandler {
             throw new EntityNotFoundException("Product does not exist");
         }
 
-        InventoryItem item = InventoryItem.newItem(dto.productId(), inventory, dto.quantity());
+        InventoryItem item = InventoryItem.newItem(dto.productId(), inventory, dto.quantity(), dto.price());
 
         inventory.addToInventory(item);
 

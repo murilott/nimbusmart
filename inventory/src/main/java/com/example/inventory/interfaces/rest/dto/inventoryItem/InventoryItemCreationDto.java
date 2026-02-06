@@ -1,5 +1,6 @@
 package com.example.inventory.interfaces.rest.dto.inventoryItem;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.example.inventory.domain.model.inventory.Inventory;
@@ -14,7 +15,9 @@ public record InventoryItemCreationDto(
     @NotNull(message = "InventoryId must not be null")
     UUID inventoryId,
     @PositiveOrZero(message = "Quantity must not be negative")
-    int quantity
+    int quantity,
+    @PositiveOrZero(message = "Price must not be negative")
+    BigDecimal price
 ) {
     
 }

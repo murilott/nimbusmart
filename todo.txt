@@ -2,8 +2,11 @@ services:
 auth
 order
 payment
-product
-inventory
+product ok
+inventory ok
 delivery
 notification
 frontend
+
+gateway-service
+service-discovery

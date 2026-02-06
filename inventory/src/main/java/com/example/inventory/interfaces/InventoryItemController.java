@@ -33,11 +33,12 @@ public class InventoryItemController {
     }
 
     @PostMapping()
-    public ResponseEntity<InventoryItemResponseDto> create(@Valid @RequestBody InventoryItemCreationDto request) {
+    public ResponseEntity<InventoryItemResponseDto> create(@Valid @RequestBody InventoryItemCreationDto request) {                
         CreateInventoryItemCommand command = new CreateInventoryItemCommand(
             request.productId(), 
             request.inventoryId(), 
-            request.quantity()
+            request.quantity(),
+            request.price()
         );
         
         InventoryItemResponseDto created = createInventoryItemHandler.handle(command);

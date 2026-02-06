@@ -1,5 +1,6 @@
 package com.example.inventory.interfaces.rest.dto.inventoryItem;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -10,6 +11,7 @@ public record InventoryItemResponseDto(
     UUID id,
     UUID productId,
     int quantity,
+    BigDecimal price,
     OffsetDateTime createdAt,
     Status status
 ) {
