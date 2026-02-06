@@ -1,6 +1,8 @@
 services:
   service-discovery:
-    build: ./service-discovery
+    build: 
+      context: .
+      dockerfile: service-discovery/Dockerfile
     container_name: service-discovery
     ports:
      - "8761:8761"
@@ -17,7 +19,8 @@ services:
      - app-network
   product:
     build:
-      context: ./product
+      context: .
+      dockerfile: product/Dockerfile
     container_name: product
     ports:
      - "8090:8080"
@@ -30,8 +33,11 @@ services:
     networks:
      - app-network
   inventory:
+    # build:
+    #   context: ./inventory
     build:
-      context: ./inventory
+      context: .
+      dockerfile: inventory/Dockerfile
     container_name: inventory
     ports:
      - "8091:8080"
@@ -44,7 +50,9 @@ services:
     networks:
      - app-network
   gateway-service:
-    build: ./gateway-service
+    build: 
+      context: .
+      dockerfile: gateway-service/Dockerfile
     container_name: gateway-service
     ports:
      - "8080:8080"

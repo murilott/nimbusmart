@@ -1,9 +1,18 @@
-FROM eclipse-temurin:25-jdk
+# ===== BUILD =====
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /build
 
+# copia TUDO do repo (pom raiz + módulos)
+COPY . .
+
+# compila só o inventory + dependências
+RUN mvn -pl inventory -am clean package -DskipTests
+
+# ===== RUNTIME =====
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 
-COPY target/inventory-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /build/inventory/target/inventory-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
-
 ENTRYPOINT ["java","-jar","app.jar"]
