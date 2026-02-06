@@ -26,6 +26,7 @@
         <module>nimbusmart-contracts</module>
         <module>product</module>
         <module>inventory</module>
+        <module>order</module>
         <module>gateway-service</module>
         <module>service-discovery</module>
     </modules>

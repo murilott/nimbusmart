@@ -49,6 +49,18 @@ services:
         condition: service_healthy
     networks:
      - app-network
+  order:
+    build:
+      context: .
+      dockerfile: order/Dockerfile
+    container_name: order
+    ports:
+     - "8092:8080"
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+    networks:
+     - app-network
   gateway-service:
     build: 
       context: .

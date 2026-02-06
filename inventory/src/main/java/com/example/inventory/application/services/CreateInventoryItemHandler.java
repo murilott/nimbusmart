@@ -1,6 +1,5 @@
 package com.example.inventory.application.services;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.inventory.infrastructure.messaging.out.ProductGrpcGateway;
