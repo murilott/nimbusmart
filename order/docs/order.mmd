@@ -1,17 +1,22 @@
 ```mermaid
 classDiagram
-    class Inventory {
+    class Order {
         -id: UUID;
-        -items: List<InventoryItem>;
+        -items: List<OrderItem>;
         -createdAt: OffsetDateTime;
+        -confirmedAt: OffsetDateTime;
+        -dispatchedAt: OffsetDateTime;
+        -deliveredAt: OffsetDateTime;
+        -cancelledAt: OffsetDateTime;
+        -totalCost: BigDecimal;
         -status: Status;
     }
 
-    class InventoryItem {
+    class OrderItem {
         -id: UUID;
-        -productId: UUID;
-        -quantity: Int;
-        -status: Status;
+        -inventoryItemId: UUID;
+        -quantity: int;
+        -cost: BigDecimal;
     }
 
     class Status ~ValueObject~ {
@@ -21,7 +26,10 @@ classDiagram
 
     class StatusType {
         <<enumeraion>>
-        IN_STOCK;
-        OUT_OF_STOCK;
+        PENDING;
+        CONFIRMED;
+        DISPATCHED;
+        DELIVERED;
+        CANCELLED;
     }
 ```
