@@ -19,7 +19,7 @@ public class CreateInventoryHandler {
     private final InventoryMapper mapper;
 
     public InventoryResponseDto handle(CreateInventoryCommand dto) {
-        Inventory inventory = Inventory.newInventory(dto.location());
+        Inventory inventory = Inventory.newInventory(dto.location(), dto.name());
         Inventory savedInventory = repository.save(inventory);
 
         return mapper.toDto(savedInventory);

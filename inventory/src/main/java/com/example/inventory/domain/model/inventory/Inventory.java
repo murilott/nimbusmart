@@ -37,16 +37,22 @@ public class Inventory {
 
     private OffsetDateTime createdAt;
 
+    // TODO: location and name trim()
+
     @NotBlank(message = "Location must not be blank")
     private String location;
+
+    @NotBlank(message = "Name must not be blank")
+    private String name;
     
     // @Embedded
     // private Status status;
 
-    public static Inventory newInventory(String location) {
+    public static Inventory newInventory(String location, String name) {
         Inventory inv = new Inventory();
         inv.setId(UUID.randomUUID());
         inv.setLocation(location);
+        inv.setName(name);
         inv.setCreatedAt(OffsetDateTime.now());
 
         return inv;

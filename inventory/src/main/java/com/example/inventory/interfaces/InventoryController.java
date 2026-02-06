@@ -34,7 +34,7 @@ public class InventoryController {
 
     @PostMapping()
     public ResponseEntity<InventoryResponseDto> create(@Valid @RequestBody InventoryCreationDto request) {
-        CreateInventoryCommand command = new CreateInventoryCommand(request.location());
+        CreateInventoryCommand command = new CreateInventoryCommand(request.location(), request.name());
         
         InventoryResponseDto created = CreateInventoryHandler.handle(command);
 

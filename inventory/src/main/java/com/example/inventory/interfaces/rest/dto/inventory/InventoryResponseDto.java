@@ -10,7 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 public record InventoryResponseDto(
     UUID id,
     List<InventoryItemResponseDto> items,
-    String location
+    String location,
+    String name
 ) {
     
 }
