@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/type/money.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.inventory.grpc";
+option java_outer_classname = "InventoryProto";
+
+service InventoryService {
+  rpc Exists (InventoryItemRequest) returns (InventoryItemResponse);
+}
+
+message InventoryItemRequest {
+  string inventoryItemId = 1;
+}
+
+message InventoryItemResponse {
+  google.type.Money cost = 1;
+}

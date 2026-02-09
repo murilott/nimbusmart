@@ -9,6 +9,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,8 @@ public class OrderItem {
     @Column(nullable = false, updatable = false)
     private UUID id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @Embedded
@@ -35,14 +39,15 @@ public class OrderItem {
 
     private BigDecimal cost;
 
-    public static OrderItem newOrderItem(ItemSnapshot InventoryItem, int quantity) {
-        OrderItem item = new OrderItem(InventoryItem, quantity);
+    public static OrderItem newOrderItem(Order order, ItemSnapshot InventoryItem, int quantity) {
+        OrderItem item = new OrderItem(order, InventoryItem, quantity);
 
         return item;
     }
 
-    private OrderItem(ItemSnapshot InventoryItem, int quantity) {
+    private OrderItem(Order order, ItemSnapshot InventoryItem, int quantity) {
         this.setId(UUID.randomUUID());
+        this.setOrder(order);
         this.setInventoryItem(InventoryItem);
         this.setQuantity(quantity);
         this.setCost(calculateCost());

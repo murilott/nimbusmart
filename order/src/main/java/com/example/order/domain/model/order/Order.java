@@ -3,29 +3,41 @@ package com.example.order.domain.model.order;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.example.order.domain.vo.Status;
 import com.example.order.domain.vo.StatusType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
 @AllArgsConstructor
 @Entity
+@Table(name = "orders")
+@Slf4j
 public class Order {
     @Id
     @Column(nullable = false, updatable = false)
     private UUID id;
 
+    @OneToMany(
+        mappedBy = "order",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
     private List<OrderItem> items;
 
     private OffsetDateTime createdAt; // at new instance
@@ -59,6 +71,10 @@ public class Order {
         if (item == null) {
             throw new IllegalArgumentException("OrderItem to be added is null");
         }
+
+        if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
+            throw new IllegalArgumentException("Can only add items to pending orders");
+        }
         
         this.getItems().add(item);
 
@@ -68,6 +84,10 @@ public class Order {
     public void addToOrder(List<OrderItem> items) {
         if (items == null) {
             throw new IllegalArgumentException("OrderItem List to be added is null");
+        }
+
+        if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
+            throw new IllegalArgumentException("Can only add items to pending orders");
         }
         
         this.getItems().addAll(items);
@@ -92,11 +112,10 @@ public class Order {
 
     private void calculateCost() {
 
-        BigDecimal newTotalCost = BigDecimal.ZERO;
-
-        this.getItems().stream().forEach(item -> {
-            newTotalCost.add(item.getCost());
-        });
+        BigDecimal newTotalCost = this.getItems().stream()
+            .map(OrderItem::getCost)
+            .filter(Objects::nonNull)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // TODO: maybe add negative or < 0 validation for newTotalCost
 

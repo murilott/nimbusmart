@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.order.interfaces.rest.dto.OrderItemCreationDto;
+import com.example.order.interfaces.rest.dto.OrderItemResponseDto;
 import com.example.order.interfaces.rest.dto.OrderResponseDto;
+import com.example.order.application.commands.CreateOrderItemCommand;
 import com.example.order.application.services.CreateOrderHandler;
 import com.example.order.application.services.ListOrderHandler;
 
@@ -20,26 +23,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("api/v1/order")
+@RequestMapping("api/v1/order-item")
 @AllArgsConstructor
-public class OrderController {
+public class OrderItemController {
     private final ListOrderHandler listOrderHandler;
-    private final CreateOrderHandler CreateOrderHandler;
+    private final com.example.order.application.services.CreateOrderItemHandler createOrderItemHandler;
     
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello order!";
-    }
-
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> listAll() {
-        List<OrderResponseDto> items = listOrderHandler.handle();
+    public ResponseEntity<List<OrderItemResponseDto>> listAll() {
+        List<OrderItemResponseDto> items = listOrderHandler.itemsHandler();
         return ResponseEntity.ok(items);
     }
 
     @PostMapping()
-    public ResponseEntity<OrderResponseDto> create() {        
-        OrderResponseDto created = CreateOrderHandler.handle();
+    public ResponseEntity<OrderItemResponseDto> create(@Valid @RequestBody OrderItemCreationDto request) {                
+        CreateOrderItemCommand command = new CreateOrderItemCommand(
+            request.orderId(), 
+            request.inventoryItemId(), 
+            request.quantity()
+        );
+        
+        OrderItemResponseDto created = createOrderItemHandler.handle(command);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }

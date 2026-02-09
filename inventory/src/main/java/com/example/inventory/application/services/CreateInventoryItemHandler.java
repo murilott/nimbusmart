@@ -23,7 +23,6 @@ public class CreateInventoryItemHandler {
     private final InventoryItemMapper mapper;
 
     private final ProductGrpcGateway productGrpcGateway;
-    // private final KafkaTemplate<String, String> kafkaTemplate;
 
     public InventoryItemResponseDto handle(CreateInventoryItemCommand dto) {
         Inventory inventory = inventoryRepository
