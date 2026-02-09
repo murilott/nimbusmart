@@ -28,10 +28,10 @@ public class Order {
 
     private List<OrderItem> items;
 
-    private OffsetDateTime createdAt;
-    private OffsetDateTime confirmedAt;
-    private OffsetDateTime dispatchedAt;
-    private OffsetDateTime deliveredAt;
+    private OffsetDateTime createdAt; // at new instance
+    private OffsetDateTime confirmedAt; // once payment is confirmed
+    private OffsetDateTime dispatchedAt; // order has left stock
+    private OffsetDateTime deliveredAt; // when courier has delivered
     private OffsetDateTime cancelledAt;
 
     private BigDecimal totalCost;
@@ -74,6 +74,10 @@ public class Order {
         
         calculateCost();
     }
+
+    private void nextStep() {
+        this.getStatus().nextStatus();
+    } 
 
     // private BigDecimal calculateCost(List<OrderItem> items) {
     //     BigDecimal costToAdd = BigDecimal.ZERO;

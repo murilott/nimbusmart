@@ -4,10 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter(AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Embeddable
 public class Status {
@@ -21,5 +24,21 @@ public class Status {
 
     private Status(StatusType value) {
         this.value = value;
+    }
+
+    public Status nextStatus() {
+        switch (this.getValue()) {
+            case PENDING:
+                this.setValue(StatusType.CONFIRMED);
+        
+            case CONFIRMED:
+                this.setValue(StatusType.DISPATCHED);        
+        
+            case DISPATCHED:
+                this.setValue(StatusType.DELIVERED);
+        
+            default:
+                throw new IllegalArgumentException("Cannot elevate Status");
+        }
     }
 }
