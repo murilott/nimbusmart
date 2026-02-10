@@ -5,5 +5,5 @@ import java.util.UUID;
 import com.example.order.domain.vo.ItemSnapshot;
 
 public interface InventoryGateway {
-    ItemSnapshot exists(UUID inventoryItemId);
+    ItemSnapshot checkAvailability(UUID inventoryItemId, int requestedQuantity);
 }

@@ -14,4 +14,5 @@ public interface InventoryItemRepository {
     public List<InventoryItem> findAll();
     public Page<InventoryItem> findAll(Pageable pageable);
     public Optional<InventoryItem> findById(UUID id);
+    public boolean existsById(UUID id);
 }

@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.example.inventory.grpc.InventoryItemRequest;
-import com.example.inventory.grpc.InventoryItemResponse;
+import com.example.inventory.grpc.InventoryAvailabilityRequest;
+import com.example.inventory.grpc.InventoryAvailabilityResponse;
 import com.example.inventory.grpc.InventoryServiceGrpc;
 import com.example.order.application.ports.out.InventoryGateway;
 import com.example.order.domain.vo.ItemSnapshot;
@@ -21,13 +21,18 @@ public class InventoryGrpcGateway implements InventoryGateway {
     private InventoryServiceGrpc.InventoryServiceBlockingStub stub;
 
     @Override
-    public ItemSnapshot exists(UUID inventoryItemId) {
-        InventoryItemRequest request = InventoryItemRequest
+    public ItemSnapshot checkAvailability(UUID inventoryItemId, int requestedQuantity) {
+        InventoryAvailabilityRequest request = InventoryAvailabilityRequest
                 .newBuilder()
                 .setInventoryItemId(inventoryItemId.toString())
+                .setRequestedQuantity(requestedQuantity)
                 .build();
 
-        InventoryItemResponse response = stub.exists(request);
+        InventoryAvailabilityResponse response = stub.checkAvailability(request);
+
+        int availableQuantity = response.getAvailableQuantity();
+
+        boolean available = response.getAvailable();
 
         long units = response.getCost().getUnits();
         int nanos = response.getCost().getNanos();

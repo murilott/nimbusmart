@@ -7,13 +7,16 @@ option java_package = "com.example.inventory.grpc";
 option java_outer_classname = "InventoryProto";
 
 service InventoryService {
-  rpc Exists (InventoryItemRequest) returns (InventoryItemResponse);
+  rpc CheckAvailability (InventoryAvailabilityRequest) returns (InventoryAvailabilityResponse);
 }
 
-message InventoryItemRequest {
+message InventoryAvailabilityRequest {
   string inventoryItemId = 1;
+  int32 requestedQuantity = 2;
 }
 
-message InventoryItemResponse {
-  google.type.Money cost = 1;
+message InventoryAvailabilityResponse {
+  bool available = 1;
+  int32 availableQuantity = 2;
+  google.type.Money cost = 3;
 }

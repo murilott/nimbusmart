@@ -29,17 +29,21 @@ public class CreateOrderItemHandler {
             .findById(cmd.orderId())
             .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-        ItemSnapshot itemSnapshot = inventoryGrpcGateway.exists(cmd.inventoryItemId());
+        ItemSnapshot itemSnapshot = inventoryGrpcGateway.checkAvailability(cmd.inventoryItemId(), cmd.quantity());
 
         if (itemSnapshot == null) {
             throw new EntityNotFoundException("InventoryItem does not exist");
         }
+
+        // TODO: get inventoryitem quantity in .proto for validations (negative stock)
 
         OrderItem item = OrderItem.newOrderItem(order, itemSnapshot, cmd.quantity());
 
         order.addToOrder(item);
 
         orderRepository.save(order);
+
+        // TODO: shoot kafka async event to inventory service for stock removal
 
         return mapper.toDto(item);
     }

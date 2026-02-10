@@ -37,4 +37,9 @@ public class InventoryItemRepositoryImpl implements InventoryItemRepository{
     public InventoryItem save(InventoryItem inventoryItem) {
         return jpa.save(inventoryItem);
     }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return jpa.existsById(id);
+    }
 }
