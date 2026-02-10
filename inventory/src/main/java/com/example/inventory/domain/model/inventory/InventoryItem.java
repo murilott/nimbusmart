@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,6 +31,10 @@ public class InventoryItem {
 
     @Column(nullable = false, updatable = false)
     private UUID productId;
+
+    @Version
+    @Column(nullable = false)
+    private Long version;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "inventory_id")

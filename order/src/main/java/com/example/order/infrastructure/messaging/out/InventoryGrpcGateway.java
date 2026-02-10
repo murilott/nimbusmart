@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.UUID;
 
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
 
 import com.example.inventory.grpc.InventoryAvailabilityRequest;
 import com.example.inventory.grpc.InventoryAvailabilityResponse;
@@ -14,8 +17,12 @@ import com.example.inventory.grpc.ReserveItemResponse;
 import com.example.order.application.ports.out.InventoryGateway;
 import com.example.order.domain.vo.ItemSnapshot;
 
+import io.grpc.stub.StreamObserver;
+import jakarta.persistence.OptimisticLockException;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 
+@Slf4j
 @Component
 public class InventoryGrpcGateway implements InventoryGateway {
 
@@ -49,6 +56,11 @@ public class InventoryGrpcGateway implements InventoryGateway {
         return ItemSnapshot.of(inventoryItemId, cost);
     }
 
+    @Retryable(
+        retryFor = OptimisticLockException.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 50)
+    )
     @Override
     public boolean reserveItem(UUID inventoryItemId, int requestedQuantity) {
         ReserveItemRequest request = ReserveItemRequest
@@ -62,5 +74,20 @@ public class InventoryGrpcGateway implements InventoryGateway {
         boolean status = response.getOk();
         
         return status;
+    }
+
+    @Recover
+    public void recover(OptimisticLockException ex, 
+            UUID inventoryItemId, 
+            int requestedQuantity
+    ) {
+        log.error("Recover called after retries. itemId={}, qty={}", 
+            inventoryItemId, 
+            requestedQuantity
+        );
+
+        throw new IllegalStateException(
+            "Could not reserve item due to concurrent update", ex
+        );
     }
 }

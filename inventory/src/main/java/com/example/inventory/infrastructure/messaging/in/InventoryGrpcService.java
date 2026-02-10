@@ -18,10 +18,13 @@ import com.google.type.Money;
 
 import io.grpc.stub.StreamObserver;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
+@Slf4j
 @GrpcService
 @AllArgsConstructor
 public class InventoryGrpcService extends InventoryServiceGrpc.InventoryServiceImplBase {
@@ -75,6 +78,11 @@ public class InventoryGrpcService extends InventoryServiceGrpc.InventoryServiceI
             ReserveItemRequest request,
             StreamObserver<ReserveItemResponse> responseObserver) {
 
+        log.info("Attempting to reserve item {} with quantity {}", 
+            request.getInventoryItemId(), 
+            request.getRequestedQuantity()
+        );
+
         InventoryItem item = itemRepository
             .findById(UUID.fromString(request.getInventoryItemId()))
             .orElseThrow(() -> new EntityNotFoundException("Inventory Item not found"));
@@ -93,4 +101,5 @@ public class InventoryGrpcService extends InventoryServiceGrpc.InventoryServiceI
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+    
 }
