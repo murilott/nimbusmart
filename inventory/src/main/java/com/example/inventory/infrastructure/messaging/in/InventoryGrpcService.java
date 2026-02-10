@@ -12,10 +12,13 @@ import com.example.inventory.domain.vo.StatusType;
 import com.example.inventory.grpc.InventoryAvailabilityRequest;
 import com.example.inventory.grpc.InventoryAvailabilityResponse;
 import com.example.inventory.grpc.InventoryServiceGrpc;
+import com.example.inventory.grpc.ReserveItemRequest;
+import com.example.inventory.grpc.ReserveItemResponse;
 import com.google.type.Money;
 
 import io.grpc.stub.StreamObserver;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 
@@ -60,6 +63,31 @@ public class InventoryGrpcService extends InventoryServiceGrpc.InventoryServiceI
                 .setAvailable(avaiable)
                 .setAvailableQuantity(availableQuantity)
                 .setCost(moneyCost)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
+
+    @Transactional
+    @Override
+    public void reserveItem(
+            ReserveItemRequest request,
+            StreamObserver<ReserveItemResponse> responseObserver) {
+
+        InventoryItem item = itemRepository
+            .findById(UUID.fromString(request.getInventoryItemId()))
+            .orElseThrow(() -> new EntityNotFoundException("Inventory Item not found"));
+
+        int requestedQuantity = request.getRequestedQuantity();
+
+        item.subtractInventoryItemQuantity(requestedQuantity);
+
+        itemRepository.save(item);
+
+        ReserveItemResponse response = ReserveItemResponse
+                .newBuilder()
+                .setOk(true)
                 .build();
 
         responseObserver.onNext(response);

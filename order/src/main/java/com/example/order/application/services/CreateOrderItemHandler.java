@@ -14,7 +14,9 @@ import com.example.order.interfaces.rest.mapper.OrderItemMapper;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class CreateOrderItemHandler {
@@ -35,15 +37,15 @@ public class CreateOrderItemHandler {
             throw new EntityNotFoundException("InventoryItem does not exist");
         }
 
-        // TODO: get inventoryitem quantity in .proto for validations (negative stock)
-
         OrderItem item = OrderItem.newOrderItem(order, itemSnapshot, cmd.quantity());
 
         order.addToOrder(item);
 
         orderRepository.save(order);
 
-        // TODO: shoot kafka async event to inventory service for stock removal
+        boolean reserve = inventoryGrpcGateway.reserveItem(cmd.inventoryItemId(), cmd.quantity());
+
+        log.info("Reserve Item status: {} | OrderItem id: {}", reserve, item.getId());
 
         return mapper.toDto(item);
     }

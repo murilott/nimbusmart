@@ -8,6 +8,7 @@ option java_outer_classname = "InventoryProto";
 
 service InventoryService {
   rpc CheckAvailability (InventoryAvailabilityRequest) returns (InventoryAvailabilityResponse);
+  rpc ReserveItem (ReserveItemRequest) returns (ReserveItemResponse);
 }
 
 message InventoryAvailabilityRequest {
@@ -19,4 +20,13 @@ message InventoryAvailabilityResponse {
   bool available = 1;
   int32 availableQuantity = 2;
   google.type.Money cost = 3;
+}
+
+message ReserveItemRequest {
+  string inventoryItemId = 1;
+  int32 requestedQuantity = 2;
+}
+
+message ReserveItemResponse {
+  bool ok = 1;
 }
