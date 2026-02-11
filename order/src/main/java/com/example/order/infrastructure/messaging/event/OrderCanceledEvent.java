@@ -1,4 +1,4 @@
-package com.example.inventory.infrastructure.messaging.in;
+package com.example.order.infrastructure.messaging.event;
 
 import java.time.Instant;
 import java.util.List;
@@ -8,9 +8,9 @@ public record OrderCanceledEvent(
     UUID eventId,
     UUID orderId,
     Instant occurredAt,
-    List<InventoryItemRestore> items
+    List<InventoryItemReserve> items
 ) {
-    public record InventoryItemRestore(
+    public record InventoryItemReserve(
         UUID iventoryItemtId,
         int quantity
     ) {}

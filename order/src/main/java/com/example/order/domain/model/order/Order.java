@@ -105,6 +105,18 @@ public class Order {
         this.getStatus().nextStatus();
     }
 
+    // TODO: confirmOrder(order listens for OrderPaid event at payment service)
+    public void confirmOrder() {
+        if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
+            throw new IllegalArgumentException("Can only confirm pending orders. Status=" + this.getStatus().getValue());
+        }
+
+        this.nextStep();
+        this.setConfirmedAt(OffsetDateTime.now());
+    }
+    // TODO: dispatchOrder(order listens for OrderDispatched event at delivery service)
+    // TODO: deliverOrder(order listens for OrderDelivered event at delivery service)
+
     public void cancelOrder() {
         if (this.getStatus().getValue().equals(StatusType.DELIVERED)) {
             throw new IllegalArgumentException("Cannot cancel finished orders");

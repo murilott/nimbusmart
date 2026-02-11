@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 import com.example.inventory.application.ports.out.InventoryItemRepository;
 import com.example.inventory.domain.model.inventory.InventoryItem;
-import com.example.inventory.infrastructure.messaging.in.OrderCanceledEvent.InventoryItemRestore;
+import com.example.inventory.infrastructure.messaging.event.OrderCanceledEvent;
+import com.example.inventory.infrastructure.messaging.event.OrderCanceledEvent.InventoryItemRestore;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,8 @@ public class OrderCanceledListener {
 
     private final InventoryItemRepository repository;
 
-    @KafkaListener(topics = "order.events")
+    // TODO: implement idempotency prevention
+    @KafkaListener(topics = "order.cancel")
     public void onOrderCanceled(OrderCanceledEvent event) {
         log.info("Returning InventoryItem quantities");
 

@@ -3,6 +3,8 @@ package com.example.order.infrastructure.messaging.out;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import com.example.order.infrastructure.messaging.event.OrderCanceledEvent;
+
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -13,7 +15,7 @@ public class OrderEventProducer {
 
     public void publishOrderCanceled(OrderCanceledEvent event) {
         kafkaTemplate.send(
-            "order.events",
+            "order.cancel",
             event.orderId().toString(),
             event
         );

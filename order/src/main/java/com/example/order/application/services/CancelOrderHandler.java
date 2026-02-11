@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import com.example.order.application.commands.CancelOrderCommand;
 import com.example.order.application.ports.out.OrderRepository;
 import com.example.order.domain.model.order.Order;
-import com.example.order.infrastructure.messaging.out.OrderCanceledEvent;
+import com.example.order.infrastructure.messaging.event.OrderCanceledEvent;
+import com.example.order.infrastructure.messaging.event.OrderCanceledEvent.InventoryItemReserve;
 import com.example.order.infrastructure.messaging.out.OrderEventProducer;
-import com.example.order.infrastructure.messaging.out.OrderCanceledEvent.InventoryItemReserve;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
