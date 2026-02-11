@@ -73,7 +73,10 @@ public class Order {
         }
 
         if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
-            throw new IllegalArgumentException("Can only add items to pending orders");
+            throw new IllegalArgumentException(
+                "Can only add items to pending orders; current status=" 
+                + this.getStatus().getValue()
+            );
         }
         
         this.getItems().add(item);
@@ -87,7 +90,10 @@ public class Order {
         }
 
         if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
-            throw new IllegalArgumentException("Can only add items to pending orders");
+            throw new IllegalArgumentException(
+                "Can only add items to pending orders; current status=" 
+                + this.getStatus().getValue()
+            );
         }
         
         this.getItems().addAll(items);
@@ -97,7 +103,24 @@ public class Order {
 
     private void nextStep() {
         this.getStatus().nextStatus();
-    } 
+    }
+
+    public void cancelOrder() {
+        if (this.getStatus().getValue().equals(StatusType.DELIVERED)) {
+            throw new IllegalArgumentException("Cannot cancel finished orders");
+        }
+
+        if (this.getStatus().getValue().equals(StatusType.CANCELLED)) {
+            throw new IllegalArgumentException("Cannot cancel already cancelled orders");
+        }
+
+        this.setStatus(Status.of(StatusType.CANCELLED));
+        this.setCancelledAt(OffsetDateTime.now());
+    }
+
+    public void returnCancelledItems() {
+        
+    }
 
     // private BigDecimal calculateCost(List<OrderItem> items) {
     //     BigDecimal costToAdd = BigDecimal.ZERO;

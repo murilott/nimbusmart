@@ -37,6 +37,9 @@ public class Status {
             case DISPATCHED:
                 this.setValue(StatusType.DELIVERED);
         
+            case CANCELLED:
+                throw new IllegalArgumentException("Order is cancelled, cannot elevate");
+        
             default:
                 throw new IllegalArgumentException("Cannot elevate Status");
         }

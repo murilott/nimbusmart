@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.example.order.domain.vo.ItemSnapshot;
+import com.example.order.domain.vo.StatusType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -40,6 +41,13 @@ public class OrderItem {
     private BigDecimal cost;
 
     public static OrderItem newOrderItem(Order order, ItemSnapshot InventoryItem, int quantity) {
+        if (!order.getStatus().getValue().equals(StatusType.PENDING)) {
+            throw new IllegalArgumentException(
+                "Can only create OrderItem with Order status pending; current status=" 
+                + order.getStatus().getValue()
+            );
+        }
+
         OrderItem item = new OrderItem(order, InventoryItem, quantity);
 
         return item;

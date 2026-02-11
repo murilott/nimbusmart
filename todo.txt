@@ -1,7 +1,7 @@
 services:
 auth
-order
-payment
+order ok 
+payment (receives orderid -> paid, shoot kafka event to order and delivery)
 product ok
 inventory ok
 delivery
