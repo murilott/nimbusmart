@@ -29,6 +29,13 @@
             <version>3.25.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.api.grpc</groupId>
+            <artifactId>proto-google-common-protos</artifactId>
+            <version>2.48.0</version>
+        </dependency>
+
+
         <!-- gRPC -->
         <dependency>
             <groupId>io.grpc</groupId>
@@ -55,44 +62,43 @@
 
         <plugins>
             <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.6.1</version>
-                <configuration>
-                    <protocArtifact>
-                        com.google.protobuf:protoc:3.25.3:exe:${os.detected.classifier}
-                    </protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>
-                        io.grpc:protoc-gen-grpc-java:1.77.1:exe:${os.detected.classifier}
-                    </pluginArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>compile-custom</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <version>3.11.4</version>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.5.0</version>
                 <executions>
                     <execution>
-                        <id>add-protobuf-sources</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>add-source</goal>
+                            <goal>run</goal>
                         </goals>
                         <configuration>
-                            <sources>
-                                <source>target/generated-sources/protobuf/java</source>
-                                <source>target/generated-sources/protobuf/grpc-java</source>
-                            </sources>
+                            <protocVersion>3.25.3</protocVersion>
+
+                            <includeMavenTypes>direct</includeMavenTypes>
+
+                            <inputDirectories>
+                                <include>src/main/proto</include>
+                            </inputDirectories>
+
+                            <outputTargets>
+                                <outputTarget>
+                                    <type>java</type>
+                                    <outputDirectory>
+                                        target/generated-sources/protobuf/java
+                                    </outputDirectory>
+                                </outputTarget>
+
+                                <outputTarget>
+                                    <type>grpc-java</type>
+                                    <pluginArtifact>
+                                        io.grpc:protoc-gen-grpc-java:1.77.1
+                                    </pluginArtifact>
+                                    <outputDirectory>
+                                        target/generated-sources/protobuf/grpc-java
+                                    </outputDirectory>
+                                </outputTarget>
+                            </outputTargets>
                         </configuration>
                     </execution>
                 </executions>
