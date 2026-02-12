@@ -11,8 +11,10 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +24,7 @@ import lombok.Setter;
 @Setter(AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Entity
+@Table(name = "payments")
 public class Payment {
     @Id
     @Column(nullable = false, updatable = false)
@@ -30,27 +33,29 @@ public class Payment {
     @NotBlank(message = "Name must not be blank")
     private String name;
 
-    @Positive(message = "Funds must not be negative")
+    @PositiveOrZero(message = "Funds must not be negative")
     private BigDecimal funds;
-    @Positive(message = "Limit must not be negative")
-    private BigDecimal limit;
-    @Positive(message = "LimitSpent must not be negative")
+    @PositiveOrZero(message = "CreditLimit must not be negative")
+    @Column(name = "credit_limit")
+    private BigDecimal creditLimit;
+
+    @PositiveOrZero(message = "LimitSpent must not be negative")
     private BigDecimal limitSpent;
 
     @Embedded
     private Method method;
 
-    public static Payment newPayment(String name, BigDecimal funds, BigDecimal limit, MethodType methodType) {
-        Payment payment = new Payment(name, funds, limit, methodType);
+    public static Payment newPayment(String name, BigDecimal funds, BigDecimal creditLimit, MethodType methodType) {
+        Payment payment = new Payment(name, funds, creditLimit, methodType);
 
         return payment;
     }
 
-    private Payment(String name, BigDecimal funds, BigDecimal limit, MethodType methodType) {
+    private Payment(String name, BigDecimal funds, BigDecimal creditLimit, MethodType methodType) {
         this.setId(UUID.randomUUID());
         this.setName(name);
         this.setFunds(funds);
-        this.setLimit(limit);
+        this.setCreditLimit(creditLimit);
         this.setLimitSpent(BigDecimal.ZERO);
         this.setMethod(Method.of(methodType));
     }
@@ -107,10 +112,10 @@ public class Payment {
 
     public void newLimit(BigDecimal newLimit) {
         if (newLimit.signum() == -1) {
-            throw new IllegalArgumentException("New Limit cannot have negative value");
+            throw new IllegalArgumentException("New CreditLimit cannot have negative value");
         }
         
-        this.setFunds(funds);
+        this.setCreditLimit(newLimit);
     }
 
     private void setFunds(BigDecimal funds) {
@@ -118,6 +123,6 @@ public class Payment {
             throw new IllegalArgumentException("Funds cannot have negative value");
         }
         
-        this.setFunds(funds);
+        this.funds = funds;
     }
 }
