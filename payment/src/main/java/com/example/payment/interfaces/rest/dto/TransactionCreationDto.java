@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record TransactionCreationDto(
-    // @Column(nullable = false, updatable = false) // TODO: remove when grpc is implemented
+    @Column(nullable = false, updatable = false)
     UUID orderId,
     @Column(nullable = false, updatable = false)
     UUID paymentId

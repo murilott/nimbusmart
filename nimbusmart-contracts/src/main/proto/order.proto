@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/type/decimal.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.order.grpc";
+option java_outer_classname = "OrderProto";
+
+service OrderService {
+  rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+}
+
+message GetOrderRequest {
+  string orderId = 1;
+}
+
+message GetOrderResponse {
+  google.type.Decimal cost = 1;
+}

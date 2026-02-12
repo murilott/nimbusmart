@@ -44,8 +44,7 @@ public class TransactionController {
     @PostMapping()
     public ResponseEntity<TransactionResponseDto> create(@Valid @RequestBody TransactionCreationDto dto) {
         CreateTransactionCommand cmd = new CreateTransactionCommand(
-            // dto.orderId(), // TODO: remove when grpc is implemented 
-            UUID.randomUUID(), 
+            dto.orderId(),
             dto.paymentId()
         );
 
