@@ -1,0 +1,29 @@
+```mermaid
+classDiagram
+    class Payment {
+        -id: UUID;
+        -name: String;
+        -funds: BigDecimal;
+        -limit: BigDecimal;
+        -type: PaymentType;
+    }
+
+    class Transaction {
+        -id: UUID;
+        -orderId: UUID;
+        -payment: Payment;
+        -createdAt: OffsetDateTime;
+    }
+
+    class Method ~ValueObject~ {
+        -String value;
+        +of(value: MethodType): Method
+    }
+
+    class MethodType {
+        <<enumeraion>>
+        PIX;
+        CREDIT;
+        DEBIT;
+    }
+```
