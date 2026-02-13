@@ -1,5 +1,6 @@
 package com.example.delivery.domain.model;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -45,6 +46,8 @@ public class Shipment {
     private OffsetDateTime deliveredAt;
     private OffsetDateTime failedAt;
 
+    private Duration duration;
+
     public static Shipment newShipment(UUID orderId, DeliveryTracking deliveryTracking, String destinyAddress) {
         Shipment shipment = new Shipment(orderId, deliveryTracking, destinyAddress);
 
@@ -52,13 +55,14 @@ public class Shipment {
     }
 
     public Shipment(UUID orderId, DeliveryTracking deliveryTracking, String destinyAddress){
+        this.setId(UUID.randomUUID());
         this.setOrderId(orderId);
         this.setDeliveryTracking(deliveryTracking);
         this.setStatus(Status.of(StatusType.PENDING));
         this.setDestinyAddress(destinyAddress);
     }
 
-    public void toDispatch() {
+    public void toDispatch(Duration duration) {
         if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
             throw new IllegalArgumentException("Can only dispatch pending shipments. Status=" +
                 this.getStatus().getValue()
@@ -66,6 +70,7 @@ public class Shipment {
         }
 
         nextStep();
+        this.setDuration(duration);
         this.setDispatchedAt(OffsetDateTime.now());
     }
 
