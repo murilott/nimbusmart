@@ -16,4 +16,5 @@ message GetOrderRequest {
 
 message GetOrderResponse {
   google.type.Decimal cost = 1;
+  bool invalid = 2;
 }

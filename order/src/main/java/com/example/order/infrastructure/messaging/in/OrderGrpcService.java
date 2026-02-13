@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.example.order.application.ports.out.OrderRepository;
 import com.example.order.domain.model.order.Order;
+import com.example.order.domain.vo.StatusType;
 import com.example.order.grpc.GetOrderRequest;
 import com.example.order.grpc.GetOrderResponse;
 import com.example.order.grpc.OrderServiceGrpc;
@@ -38,6 +39,8 @@ public class OrderGrpcService extends OrderServiceGrpc.OrderServiceImplBase{
             log.warn("Order {} not found. Ignoring event.",
                     request.getOrderId());
         }
+
+        boolean invalid = order.isEmpty() || !order.get().getStatus().getValue().equals(StatusType.PENDING);
         
         if (!order.isEmpty()) {
             totalCost = Decimal.newBuilder().setValue(order.get().getTotalCost().toPlainString()).build();
@@ -46,6 +49,7 @@ public class OrderGrpcService extends OrderServiceGrpc.OrderServiceImplBase{
         GetOrderResponse response = GetOrderResponse
                 .newBuilder()
                 .setCost(totalCost)
+                .setInvalid(invalid)
                 .build();
 
         responseObserver.onNext(response);

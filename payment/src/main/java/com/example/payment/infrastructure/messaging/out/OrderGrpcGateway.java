@@ -11,6 +11,7 @@ import com.example.order.grpc.OrderServiceGrpc;
 import com.example.payment.application.ports.out.OrderGateway;
 import com.example.payment.domain.vo.OrderSnapshot;
 
+import jakarta.persistence.EntityNotFoundException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 
 @Component
@@ -26,6 +27,12 @@ public class OrderGrpcGateway implements OrderGateway{
                 .build();
 
         GetOrderResponse response = stub.getOrder(request);
+
+        boolean invalid = response.getInvalid();
+
+        if (invalid) {
+            throw new EntityNotFoundException("Order not found");
+        }
 
         BigDecimal cost = new BigDecimal(response.getCost().getValue());
 
