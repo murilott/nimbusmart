@@ -1,6 +1,8 @@
 package com.example.payment.application.services;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,9 @@ import com.example.payment.application.ports.out.TransactionRepository;
 import com.example.payment.domain.model.Payment;
 import com.example.payment.domain.model.Transaction;
 import com.example.payment.domain.vo.OrderSnapshot;
+import com.example.payment.infrastructure.messaging.event.OrderPaidEvent;
 import com.example.payment.infrastructure.messaging.out.OrderGrpcGateway;
+import com.example.payment.infrastructure.messaging.out.PaymentEventProducer;
 import com.example.payment.interfaces.rest.dto.TransactionResponseDto;
 import com.example.payment.interfaces.rest.mapper.TransactionMapper;
 
@@ -26,6 +30,7 @@ public class CreateTransactionHandler {
     private TransactionMapper mapper;
 
     private OrderGrpcGateway orderGateway;
+    private PaymentEventProducer producer;
     
     public TransactionResponseDto handle(CreateTransactionCommand cmd) {
         OrderSnapshot order = orderGateway.getOrder(cmd.orderId());
@@ -48,7 +53,13 @@ public class CreateTransactionHandler {
 
         Transaction savedTransaction = repository.save(transaction);
 
-        // shoot kafak to order(dispatch status) and delivery
+        OrderPaidEvent event = new OrderPaidEvent(
+            UUID.randomUUID(),
+            cmd.orderId(),
+            Instant.now()
+        );
+
+        producer.publishOrderPaid(event);
 
         return mapper.toDto(savedTransaction);
     }

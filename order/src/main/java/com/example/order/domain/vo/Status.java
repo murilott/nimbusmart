@@ -28,23 +28,28 @@ public class Status {
 
     public Status nextStatus() {
         switch (this.getValue()) {
-            case PENDING:
+            case StatusType.PENDING:
                 this.setValue(StatusType.CONFIRMED);
+                break;
         
-            case CONFIRMED:
+            case StatusType.CONFIRMED:
                 this.setValue(StatusType.DISPATCHED);        
+                break;
         
-            case DISPATCHED:
+            case StatusType.DISPATCHED:
                 this.setValue(StatusType.DELIVERED);
+                break;
         
-            case CANCELLED:
+            case StatusType.CANCELLED:
                 throw new IllegalArgumentException("Order is canceled, cannot elevate");
         
-            case DELIVERED:
+            case StatusType.DELIVERED:
                 throw new IllegalArgumentException("Order is delivered, cannot elevate");
-        
+                
             default:
                 throw new IllegalArgumentException("Cannot elevate Status");
         }
+
+        return this;
     }
 }
