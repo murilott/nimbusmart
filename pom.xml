@@ -28,6 +28,7 @@
         <module>inventory</module>
         <module>order</module>
         <module>payment</module>
+        <module>delivery</module>
         <module>gateway-service</module>
         <module>service-discovery</module>
     </modules>

@@ -1,0 +1,34 @@
+```mermaid
+classDiagram
+    class DeliveryTracking {
+        -id: UUID;
+        -itemsToDeliver: List<Shipment>;
+        -itemsDelivered: List<Shipment>;
+    }
+
+    class Shipment {
+        -id: UUID;
+        -orderId: UUID;
+        -deliveryTracking: DeliveryTracking;
+        -status: Status;
+        -destinyAddress: String;
+
+        -createdAt: OffsetDateTime; // entity created
+        -dispatchedAt: OffsetDateTime; // delivery left
+        -deliveredAt: OffsetDateTime;
+        -failedAt: OffsetDateTime;
+    }
+
+    class Status ~ValueObject~ {
+        -String value;
+        +of(value: StatusType): Status
+    }
+
+    class StatusType {
+        <<enumeraion>>
+        PENDING;
+        IN_TRANSIT;
+        DELIVERED;
+        FAILED;
+    }
+```
