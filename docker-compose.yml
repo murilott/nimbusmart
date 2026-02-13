@@ -73,6 +73,18 @@ services:
         condition: service_healthy
     networks:
      - app-network
+  delivery:
+    build:
+      context: .
+      dockerfile: delivery/Dockerfile
+    container_name: delivery
+    ports:
+     - "8094:8080"
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+    networks:
+     - app-network
   gateway-service:
     build: 
       context: .
