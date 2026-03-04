@@ -4,10 +4,7 @@ import java.util.UUID;
 
 import com.example.delivery.domain.model.DeliveryTracking;
 
-public record CreateShipmentCommand(
-    UUID orderId, 
-    UUID deliveryTrackingId, 
-    String destinyAddress
+public record CreateDeliveryTrackingCommand(
 ) {
     
 }

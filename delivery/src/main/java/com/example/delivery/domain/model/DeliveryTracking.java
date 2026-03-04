@@ -8,9 +8,11 @@ import java.util.UUID;
 
 import com.example.delivery.domain.vo.StatusType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +26,27 @@ public class DeliveryTracking {
     @Column(nullable = false, updatable = false)
     private UUID id;
 
+    // TODO: courier attribute/entity
+
+    @OneToMany(
+        mappedBy = "deliveryTracking",
+        cascade = CascadeType.ALL,
+        orphanRemoval = false
+    )
     private Deque<Shipment> itemsToDeliver = new ArrayDeque<>();
+    
+    @OneToMany(
+        mappedBy = "deliveryTracking",
+        cascade = CascadeType.ALL,
+        orphanRemoval = false
+    )
+    private Deque<Shipment> itemsDelivering = new ArrayDeque<>();
+
+    @OneToMany(
+        mappedBy = "deliveryTracking",
+        cascade = CascadeType.ALL,
+        orphanRemoval = false
+    )
     private Deque<Shipment> itemsDelivered = new ArrayDeque<>();
 
     public static DeliveryTracking newDeliveryTracking(){
@@ -37,8 +59,21 @@ public class DeliveryTracking {
         this.setId(UUID.randomUUID());
     }
 
-    public Shipment nextShipment() {
+    // controller/service - função "sair para entrega" obtém próximo shipment do itemstodeliver
+    //   - shipment sai da lista itemstodeliver
+    //   - shipment chama todisptach, fica em status in transit
+
+    // controller - função "entregar" obtém próximo shipment do itemstodeliver
+    //   - shipment chama todisptach, fica em status in transit
+
+    public Shipment nextDeliverShipment() {
         Shipment shipment = this.getItemsToDeliver().pollFirst();
+
+        return shipment;
+    }
+
+    public Shipment nextDeliveringShipment() {
+        Shipment shipment = this.getItemsDelivering().pollFirst();
 
         return shipment;
     }
@@ -83,5 +118,20 @@ public class DeliveryTracking {
         }
         
         this.getItemsDelivered().addLast(shipment);
+    }
+
+    public void addToDelivering(Shipment shipment) {
+        if (shipment == null) {
+            throw new IllegalArgumentException("Shipment to be added is null");
+        }
+
+        if (!shipment.getStatus().getValue().equals(StatusType.IN_TRANSIT)) {
+            throw new IllegalArgumentException(
+                "Can only add to delivering list if shipment is in transit; current status=" 
+                + shipment.getStatus().getValue()
+            );
+        }
+        
+        this.getItemsDelivering().addLast(shipment);
     }
 }

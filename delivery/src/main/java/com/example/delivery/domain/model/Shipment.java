@@ -54,13 +54,14 @@ public class Shipment {
         return shipment;
     }
 
-    public Shipment(UUID orderId, DeliveryTracking deliveryTracking, String destinyAddress){
+    private Shipment(UUID orderId, DeliveryTracking deliveryTracking, String destinyAddress){
         this.setId(UUID.randomUUID());
         this.setOrderId(orderId);
         this.setDeliveryTracking(deliveryTracking);
         this.setStatus(Status.of(StatusType.PENDING));
         this.setDestinyAddress(destinyAddress);
     }
+
 
     public void toDispatch(Duration duration) {
         if (!this.getStatus().getValue().equals(StatusType.PENDING)) {
