@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("api/v1/delivery-tracking")
+@RequestMapping("api/v1/shipment")
 @AllArgsConstructor
 public class ShipmentController {
     private CreateShipmentHandler createShipmentHandler;
@@ -48,7 +48,4 @@ public class ShipmentController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-    
-    
-
 }

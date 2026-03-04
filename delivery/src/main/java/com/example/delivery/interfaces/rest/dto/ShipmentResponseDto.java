@@ -10,7 +10,7 @@ import com.example.delivery.domain.vo.Status;
 public record ShipmentResponseDto(
     UUID id,
     UUID orderId,
-    DeliveryTracking deliveryTracking,
+    UUID deliveryTrackingId,
     Status status,
     String destinyAddress,
 

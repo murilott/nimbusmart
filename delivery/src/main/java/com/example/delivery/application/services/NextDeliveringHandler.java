@@ -1,39 +1,44 @@
 package com.example.delivery.application.services;
 
-import lombok.AllArgsConstructor;
+import java.time.Duration;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.example.delivery.application.commands.CreateShipmentCommand;
+import com.example.delivery.application.commands.DeliverShipmentCommand;
+import com.example.delivery.application.commands.DeliveredShipmentCommand;
 import com.example.delivery.application.ports.out.DeliveryTrackingRepository;
-import com.example.delivery.application.ports.out.ShipmentRepository;
 import com.example.delivery.domain.model.DeliveryTracking;
 import com.example.delivery.domain.model.Shipment;
 import com.example.delivery.interfaces.rest.dto.ShipmentResponseDto;
 import com.example.delivery.interfaces.rest.mapper.ShipmentMapper;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class CreateShipmentHandler {
-    private ShipmentRepository repository;
+public class NextDeliveringHandler {
     private DeliveryTrackingRepository deliveryTrackingRepository;
-    private ShipmentMapper mapper;
+    private ShipmentMapper shipmentMapper;
 
-    public ShipmentResponseDto handle(CreateShipmentCommand cmd) {
+    public Optional<ShipmentResponseDto> handle(DeliveredShipmentCommand cmd) {
         DeliveryTracking deliveryTracking = deliveryTrackingRepository
             .findById(cmd.deliveryTrackingId())
             .orElseThrow(() -> new EntityNotFoundException("DeliveryTracking not found"));
+        
+        Optional<Shipment> shipment = deliveryTracking.pullNextTransitToDelivered();
 
-        // TODO: grpc to verify orderId
+        if (shipment.isEmpty()) {
+            return Optional.empty();
+        }
 
-        Shipment shipment = Shipment.newShipment(cmd.orderId(), deliveryTracking, cmd.destinyAddress());
-
-        deliveryTracking.getShipments().add(shipment);
+        // kafka to order(atDelivered)
 
         deliveryTrackingRepository.save(deliveryTracking);
 
-        return mapper.toDto(shipment);
+        ShipmentResponseDto dto = shipmentMapper.toDto(shipment.get());
+
+        return Optional.of(dto);
     }
 }

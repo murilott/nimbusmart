@@ -58,6 +58,7 @@ public class Shipment {
         this.setId(UUID.randomUUID());
         this.setOrderId(orderId);
         this.setDeliveryTracking(deliveryTracking);
+        this.setCreatedAt(OffsetDateTime.now());
         this.setStatus(Status.of(StatusType.PENDING));
         this.setDestinyAddress(destinyAddress);
     }
