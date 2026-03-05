@@ -87,33 +87,19 @@ public class DeliveryTracking {
         return Optional.empty();
     }
 
-    // public Shipment nextDeliverShipment() {
-    //     Shipment shipment = pollFirstDeliver();
+    public Optional<Shipment> cancelShipment(UUID shipmentId) {
+        Optional<Shipment> shipment = getShipments().stream()
+            .filter(s -> s.getId().equals(shipmentId))
+            .findFirst();
+        
+        if (shipment.isEmpty()) {
+            return Optional.empty();
+        }
 
-    //     return shipment;
-    // }
+        shipment.get().cancelShipment();
 
-    // public Shipment nextDeliveringShipment() {
-    //     Shipment shipment = pollFirstDelivering();
-
-    //     return shipment;
-    // }
-
-    // private Shipment pollFirstDeliver() {
-    //     if (this.itemsToDeliver == null || this.itemsToDeliver.isEmpty()) {
-    //         return null;
-    //     }
-
-    //     return this.itemsToDeliver.remove(0);
-    // }
-
-    // private Shipment pollFirstDelivering() {
-    //     if (this.itemsDelivering == null || this.itemsDelivering.isEmpty()) {
-    //         return null;
-    //     }
-
-    //     return this.itemsDelivering.remove(0);
-    // }
+        return shipment;
+    }
 
     public List<Shipment> getItemsToDeliver() {
         return shipments.stream()
@@ -133,57 +119,9 @@ public class DeliveryTracking {
                 .toList();
     }
 
-    // public void addToDeliverQueue(Shipment shipment) {
-    //     if (shipment == null) {
-    //         throw new IllegalArgumentException("Shipment to be added is null");
-    //     }
-
-    //     if (!shipment.getStatus().getValue().equals(StatusType.PENDING)) {
-    //         throw new IllegalArgumentException(
-    //                 "Can only add to deliver if shipment is pending; current status="
-    //                         + shipment.getStatus().getValue());
-    //     }
-
-    //     this.getShipments().add(shipment);
-    // }
-
-    // public void addToDeliverQueue(List<Shipment> shipments) {
-    //     if (shipments == null) {
-    //         throw new IllegalArgumentException("Shipment to be added is null");
-    //     }
-
-    //     List<Shipment> toAdd = shipments.stream().filter((Shipment shipment) -> {
-    //         return shipment.getStatus().getValue().equals(StatusType.PENDING);
-    //     }).toList();
-
-    //     this.getShipments().addAll(toAdd);
-    // }
-
-    // public void addToDelivered(Shipment shipment) {
-    //     if (shipment == null) {
-    //         throw new IllegalArgumentException("Shipment to be added is null");
-    //     }
-
-    //     if (!shipment.getStatus().getValue().equals(StatusType.DELIVERED)) {
-    //         throw new IllegalArgumentException(
-    //                 "Can only add to delivered list if shipment is delivered; current status="
-    //                         + shipment.getStatus().getValue());
-    //     }
-
-    //     this.getShipments().add(shipment);
-    // }
-
-    // public void addToDelivering(Shipment shipment) {
-    //     if (shipment == null) {
-    //         throw new IllegalArgumentException("Shipment to be added is null");
-    //     }
-
-    //     if (!shipment.getStatus().getValue().equals(StatusType.IN_TRANSIT)) {
-    //         throw new IllegalArgumentException(
-    //                 "Can only add to delivering list if shipment is in transit; current status="
-    //                         + shipment.getStatus().getValue());
-    //     }
-
-    //     this.getShipments().add(shipment);
-    // }
+    public List<Shipment> getItemsCanceled() {
+        return shipments.stream()
+                .filter(s -> s.getStatus().getValue() == StatusType.FAILED)
+                .toList();
+    }
 }

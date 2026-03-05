@@ -82,12 +82,19 @@ public class Shipment {
                 this.getStatus().getValue()
             );
         }
-
+        
         nextStep();
         this.setDeliveredAt(OffsetDateTime.now());
     }
     
     public void cancelShipment(){
+        if (this.getStatus().getValue().equals(StatusType.DELIVERED) ||
+            this.getStatus().getValue().equals(StatusType.FAILED)) {
+            throw new IllegalArgumentException("Can not cancel delivered/failed shipments. Status=" +
+                this.getStatus().getValue()
+            );
+        }
+
         this.setStatus(Status.of(StatusType.FAILED));
         this.setFailedAt(OffsetDateTime.now());
     }
@@ -95,5 +102,4 @@ public class Shipment {
     private void nextStep() {
         this.getStatus().nextStatus();
     }
-
 }

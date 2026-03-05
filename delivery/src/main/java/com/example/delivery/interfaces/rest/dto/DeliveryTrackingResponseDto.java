@@ -8,7 +8,8 @@ public record DeliveryTrackingResponseDto(
     UUID id,
     List<ShipmentResponseDto> itemsToDeliver,
     List<ShipmentResponseDto> itemsDelivering,
-    List<ShipmentResponseDto> itemsDelivered
+    List<ShipmentResponseDto> itemsDelivered,
+    List<ShipmentResponseDto> itemsCanceled
 ) {
     
 }
