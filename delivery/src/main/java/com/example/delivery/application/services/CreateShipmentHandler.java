@@ -26,7 +26,7 @@ public class CreateShipmentHandler {
             .findById(cmd.deliveryTrackingId())
             .orElseThrow(() -> new EntityNotFoundException("DeliveryTracking not found"));
 
-        // TODO: grpc to verify orderId
+        // TODO: grpc to verify orderId (not needed actually)
 
         Shipment shipment = Shipment.newShipment(cmd.orderId(), deliveryTracking, cmd.destinyAddress());
 

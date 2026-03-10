@@ -114,6 +114,15 @@ public class Order {
         this.nextStep();
         this.setConfirmedAt(OffsetDateTime.now());
     }
+
+    public void deliverOrder() {
+        if (!this.getStatus().getValue().equals(StatusType.CONFIRMED)) {
+            throw new IllegalArgumentException("Can only deliver confirmed orders. Status=" + this.getStatus().getValue());
+        }
+
+        this.nextStep();
+        this.setDeliveredAt(OffsetDateTime.now());
+    }
     // TODO: dispatchOrder(order listens for OrderDispatched event at delivery service)
     // TODO: deliverOrder(order listens for OrderDelivered event at delivery service)
 

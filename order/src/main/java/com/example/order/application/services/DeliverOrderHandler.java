@@ -19,13 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ConfirmOrderHandler {
+public class DeliverOrderHandler {
     private final OrderRepository repository;
-    private final OrderEventProducer producer;
+    private OrderEventProducer producer;
 
     @Transactional
     public void handle(UUID orderId) {
-        log.info("Changing order status");
+        log.info("Delivering order in order service");
 
         Optional<Order> optional = repository.findById(orderId);
 
@@ -34,24 +34,14 @@ public class ConfirmOrderHandler {
                     orderId);
         }
 
-        if (!optional.isEmpty()) {
-            Order order = optional.get();
+        Order order = optional.get();
 
-            order.confirmOrder();
+        order.deliverOrder();
 
-            repository.save(order);
+        repository.save(order);
 
-            log.info("Order {} paid with status {}",
-                    order.getId(), order.getStatus().getValue());
+        log.info("Order {} confirmed with status {}",
+                order.getId(), order.getStatus().getValue());
 
-            OrderDeliveryReadyEvent event = new OrderDeliveryReadyEvent(
-                    UUID.randomUUID(),
-                    order.getId(),
-                    Instant.now());
-
-            producer.publishOrderDeliveryReady(event);
-
-            // kafka event to delivery order.disptach
-        }
     }
 }

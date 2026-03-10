@@ -10,3 +10,7 @@ frontend
 
 gateway-service
 service-discovery
+
+
+fazer:
+order confirmada, kafka pra delivery (orderCOnfirmedHandler)

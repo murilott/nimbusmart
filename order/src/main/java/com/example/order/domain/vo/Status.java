@@ -33,12 +33,16 @@ public class Status {
                 break;
         
             case StatusType.CONFIRMED:
-                this.setValue(StatusType.DISPATCHED);        
+                this.setValue(StatusType.DELIVERED);        
                 break;
         
-            case StatusType.DISPATCHED:
-                this.setValue(StatusType.DELIVERED);
-                break;
+            // case StatusType.CONFIRMED:
+            //     this.setValue(StatusType.DISPATCHED);        
+            //     break;
+        
+            // case StatusType.DISPATCHED:
+            //     this.setValue(StatusType.DELIVERED);
+            //     break;
         
             case StatusType.CANCELLED:
                 throw new IllegalArgumentException("Order is canceled, cannot elevate");

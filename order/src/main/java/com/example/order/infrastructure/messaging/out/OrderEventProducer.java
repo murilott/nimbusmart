@@ -4,6 +4,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.example.order.infrastructure.messaging.event.OrderCanceledEvent;
+import com.example.order.infrastructure.messaging.event.OrderDeliveryReadyEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,11 +12,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderEventProducer {
 
-    private final KafkaTemplate<String, OrderCanceledEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void publishOrderCanceled(OrderCanceledEvent event) {
         kafkaTemplate.send(
             "order.cancel",
+            event.orderId().toString(),
+            event
+        );
+    }
+
+    public void publishOrderDeliveryReady(OrderDeliveryReadyEvent event) {
+        kafkaTemplate.send(
+            "order.delivery",
             event.orderId().toString(),
             event
         );
