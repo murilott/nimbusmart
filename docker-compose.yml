@@ -2,7 +2,9 @@ services:
   service-discovery:
     build: 
       context: .
-      dockerfile: service-discovery/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: service-discovery
     container_name: service-discovery
     ports:
      - "8761:8761"
@@ -20,7 +22,9 @@ services:
   product:
     build:
       context: .
-      dockerfile: product/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: product
     container_name: product
     ports:
      - "8090:8080"
@@ -37,7 +41,9 @@ services:
     #   context: ./inventory
     build:
       context: .
-      dockerfile: inventory/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: inventory
     container_name: inventory
     ports:
      - "8091:8080"
@@ -52,7 +58,9 @@ services:
   order:
     build:
       context: .
-      dockerfile: order/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: order
     container_name: order
     ports:
      - "8092:8080"
@@ -64,7 +72,9 @@ services:
   payment:
     build:
       context: .
-      dockerfile: payment/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: payment
     container_name: payment
     ports:
      - "8093:8080"
@@ -76,7 +86,9 @@ services:
   delivery:
     build:
       context: .
-      dockerfile: delivery/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: delivery
     container_name: delivery
     ports:
      - "8094:8080"
@@ -88,7 +100,9 @@ services:
   gateway-service:
     build: 
       context: .
-      dockerfile: gateway-service/Dockerfile
+      dockerfile: Dockerfile
+      args:
+        SERVICE: gateway-service
     container_name: gateway-service
     ports:
      - "8080:8080"

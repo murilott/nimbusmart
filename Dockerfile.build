@@ -1,0 +1,21 @@
+# FROM maven:3.9-eclipse-temurin-21 AS build
+
+# WORKDIR /build
+
+# # copia apenas pom primeiro (cache)
+# COPY pom.xml .
+# COPY order/pom.xml order/
+# COPY delivery/pom.xml delivery/
+# COPY inventory/pom.xml inventory/
+# COPY payment/pom.xml payment/
+# COPY gateway-service/pom.xml gateway-service/
+# COPY product/pom.xml product/
+# COPY service-discovery/pom.xml service-discovery/
+# COPY nimbusmart-contracts/pom.xml nimbusmart-contracts/
+
+# RUN mvn -B -q -e -DskipTests dependency:go-offline
+
+# # copia código depois
+# COPY . .
+
+# RUN mvn -B -DskipTests package
