@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.contracts.events.OrderPaidEvent;
 import com.example.payment.application.commands.CreateTransactionCommand;
 import com.example.payment.application.ports.out.OrderGateway;
 import com.example.payment.application.ports.out.PaymentRepository;
@@ -13,7 +14,6 @@ import com.example.payment.application.ports.out.TransactionRepository;
 import com.example.payment.domain.model.Payment;
 import com.example.payment.domain.model.Transaction;
 import com.example.payment.domain.vo.OrderSnapshot;
-import com.example.payment.infrastructure.messaging.event.OrderPaidEvent;
 import com.example.payment.infrastructure.messaging.out.OrderGrpcGateway;
 import com.example.payment.infrastructure.messaging.out.PaymentEventProducer;
 import com.example.payment.interfaces.rest.dto.TransactionResponseDto;

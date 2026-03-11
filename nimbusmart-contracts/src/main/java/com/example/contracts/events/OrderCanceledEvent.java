@@ -1,4 +1,4 @@
-package com.example.order.infrastructure.messaging.event;
+package com.example.contracts.events;
 
 import java.time.Instant;
 import java.util.List;

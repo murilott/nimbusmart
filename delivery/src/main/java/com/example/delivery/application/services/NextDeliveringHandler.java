@@ -7,13 +7,12 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.contracts.events.OrderDeliveredEvent;
 import com.example.delivery.application.commands.DeliverShipmentCommand;
 import com.example.delivery.application.commands.DeliveredShipmentCommand;
 import com.example.delivery.application.ports.out.DeliveryTrackingRepository;
 import com.example.delivery.domain.model.DeliveryTracking;
 import com.example.delivery.domain.model.Shipment;
-import com.example.delivery.infrastructure.messaging.event.OrderDeliveredEvent;
-import com.example.delivery.infrastructure.messaging.event.OrderDeliveryReadyEvent;
 import com.example.delivery.infrastructure.messaging.out.DeliveryEventProducer;
 import com.example.delivery.interfaces.rest.dto.ShipmentResponseDto;
 import com.example.delivery.interfaces.rest.mapper.ShipmentMapper;

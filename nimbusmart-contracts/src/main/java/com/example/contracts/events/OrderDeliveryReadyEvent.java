@@ -1,9 +1,9 @@
-package com.example.delivery.infrastructure.messaging.event;
+package com.example.contracts.events;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public record OrderDeliveredEvent(
+public record OrderDeliveryReadyEvent(
     UUID eventId,
     UUID orderId,
     Instant occurredAt 

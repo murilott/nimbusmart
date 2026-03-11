@@ -3,8 +3,8 @@ package com.example.order.infrastructure.messaging.out;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import com.example.order.infrastructure.messaging.event.OrderCanceledEvent;
-import com.example.order.infrastructure.messaging.event.OrderDeliveryReadyEvent;
+import com.example.contracts.events.OrderCanceledEvent;
+import com.example.contracts.events.OrderDeliveryReadyEvent;
 
 import lombok.RequiredArgsConstructor;
 

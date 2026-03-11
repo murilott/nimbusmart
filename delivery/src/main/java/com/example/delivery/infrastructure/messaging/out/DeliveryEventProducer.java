@@ -3,7 +3,7 @@ package com.example.delivery.infrastructure.messaging.out;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import com.example.delivery.infrastructure.messaging.event.OrderDeliveredEvent;
+import com.example.contracts.events.OrderDeliveredEvent;
 
 import lombok.RequiredArgsConstructor;
 

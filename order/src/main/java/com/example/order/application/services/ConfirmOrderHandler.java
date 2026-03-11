@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.contracts.events.OrderDeliveryReadyEvent;
+import com.example.contracts.events.OrderPaidEvent;
 import com.example.order.application.ports.out.OrderRepository;
 import com.example.order.domain.model.order.Order;
-import com.example.order.infrastructure.messaging.event.OrderDeliveryReadyEvent;
-import com.example.order.infrastructure.messaging.event.OrderPaidEvent;
 import com.example.order.infrastructure.messaging.out.OrderEventProducer;
 
 import jakarta.transaction.Transactional;

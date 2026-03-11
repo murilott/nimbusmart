@@ -3,7 +3,7 @@ package com.example.payment.infrastructure.messaging.out;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import com.example.payment.infrastructure.messaging.event.OrderPaidEvent;
+import com.example.contracts.events.OrderPaidEvent;
 
 import lombok.RequiredArgsConstructor;
 

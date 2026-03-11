@@ -5,12 +5,12 @@ import java.util.Optional;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import com.example.contracts.events.OrderDeliveredEvent;
+import com.example.contracts.events.OrderPaidEvent;
 import com.example.order.application.ports.out.OrderRepository;
 import com.example.order.application.services.ConfirmOrderHandler;
 import com.example.order.application.services.DeliverOrderHandler;
 import com.example.order.domain.model.order.Order;
-import com.example.order.infrastructure.messaging.event.OrderDeliveredEvent;
-import com.example.order.infrastructure.messaging.event.OrderPaidEvent;
 import com.example.order.interfaces.rest.mapper.OrderMapper;
 
 import jakarta.transaction.Transactional;
