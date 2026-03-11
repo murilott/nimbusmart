@@ -5,10 +5,10 @@ import ProductCard from './ProductCard'
 function Home() {
   return (
     <div className='content'>
-        <h3>Produtos</h3>
+        <h3>Products</h3>
 
         <div>
-            <label htmlFor="">Pesquisar:</label>
+            <label htmlFor="">Search:</label>
             <input type="text" />
         </div>
 
