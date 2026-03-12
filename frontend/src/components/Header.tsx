@@ -7,7 +7,7 @@ function Header() {
     return (
         <div className='header'>
             <div className='header-content'>
-                <h3 className='header-logo'><HeaderLogo /></h3>
+                <h3><HeaderLogo /></h3>
 
                 <ul className='font-big'>
                     <li><Link to="/">Home</Link></li>

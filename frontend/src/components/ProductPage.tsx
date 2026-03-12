@@ -111,14 +111,14 @@ function ProductPage() {
                     </div>
 
 
-                    <div className='product-page-desc product-page-card'>
+                    <div className='product-page-desc card'>
                         <h3>Description</h3>
 
                         <p>{product.description}</p>
                     </div>
                 </div>
 
-                <div className='product-page-checkout product-page-card'>
+                <div className='product-page-checkout card'>
                     <h3 className='product-page-addtocart'>Add to Cart</h3>
                     <p><strong>Price: {toBrl(inventoryItem?.price)}</strong></p>
                     <p>Available: {inventoryItem?.quantity}</p>
