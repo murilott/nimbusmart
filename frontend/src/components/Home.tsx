@@ -52,10 +52,10 @@ const items: InventoryItemDto[] = [
 ]
 
 function Home() {
-    const { inventoryItemList, isLoading, isError, error } = useQuery({
-        queryKey: ['inventoryItem'],
-        // queryFn: () => fetchProduct(id), // 3. Passa o ID para a função de fetch
-    });
+    // const { inventoryItemList, isLoading, isError, error } = useQuery({
+    //     queryKey: ['inventoryItem'],
+    //     // queryFn: () => fetchProduct(id), // 3. Passa o ID para a função de fetch
+    // });
 
     return (
         <div className='content'>

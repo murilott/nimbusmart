@@ -3,7 +3,7 @@ import "../style/productcard.css"
 import { Link, useNavigate } from 'react-router-dom'
 import type { ProductDto } from '../types/ProductDto';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
-import { productDtoNew } from '../new/ProductDto';
+import { productNew } from '../new/ProductDto';
 import { toBrl } from '../helper/toPrice';
 
 interface ProductCardProps {
@@ -37,7 +37,7 @@ const prods: ProductDto[] = [
 function ProductCard({ inventoryItem }: ProductCardProps) {
     const navigate = useNavigate();
     const [product, setProduct] = useState<ProductDto>(() => {
-        const prod: ProductDto = prods.find(p => inventoryItem.productId == p.id) ?? productDtoNew;
+        const prod: ProductDto = prods.find(p => inventoryItem.productId == p.id) ?? productNew;
 
         return {
             id: inventoryItem.productId,

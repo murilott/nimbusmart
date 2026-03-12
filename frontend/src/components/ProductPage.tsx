@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import type { ProductDto } from '../types/ProductDto';
-import { productDtoNew } from '../new/ProductDto';
+import { productNew } from '../new/ProductDto';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
@@ -71,7 +71,7 @@ function ProductPage() {
     });
 
     const [product, setProduct] = useState<ProductDto>(() => {
-        const prod: ProductDto = prods.find(p => id == p.id?.toString()) ?? productDtoNew;
+        const prod: ProductDto = prods.find(p => id == p.id?.toString()) ?? productNew;
 
         return {
             id: prod.id,
