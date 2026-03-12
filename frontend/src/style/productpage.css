@@ -1,0 +1,36 @@
+.product-page-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+/* .product-page-body > div {
+    border: 1px solid;
+} */
+
+.product-page-checkout {
+    align-self: center;
+    width: 30%;
+}
+
+.product-page-card {
+    border-radius: 15px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.product-page-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 60%;
+}
+
+.product-page-img {
+    align-self: center;
+}
+
+.product-page-return {
+    margin-top: 15px;
+}

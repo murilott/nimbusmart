@@ -19,7 +19,7 @@
 }
 
 .product-card:hover {
-    transform: scale(1.02);
+    transform: scale(1.04);
     z-index: 10;            /* Garante que o item fique por cima dos vizinhos */
     
     /* Dica: Intensifique a sombra que criamos antes para dar profundidade */

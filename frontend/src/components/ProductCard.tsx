@@ -1,29 +1,67 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "../style/productcard.css"
 import { Link, useNavigate } from 'react-router-dom'
 import type { ProductDto } from '../types/ProductDto';
+import type { InventoryItemDto } from '../types/InventoryItemDto';
+import { productDtoNew } from '../new/ProductDto';
+import { toPrice } from '../helper/toPrice';
 
 interface ProductCardProps {
-    product: ProductDto
+    inventoryItem: InventoryItemDto
 }
 
-function ProductCard({ product }: ProductCardProps) {
+const prods: ProductDto[] = [
+    {
+        id: 1,
+        name: "Mouse",
+        description: "Mouse Logitech",
+        tags: [],
+        image: ""
+    },
+    {
+        id: 2,
+        name: "Teclado",
+        description: "Teclado Logitech",
+        tags: [],
+        image: ""
+    },
+    {
+        id: 3,
+        name: "Pendrive",
+        description: "Pendrive Logitech",
+        tags: [],
+        image: ""
+    },
+]
+
+function ProductCard({ inventoryItem }: ProductCardProps) {
     const navigate = useNavigate();
+    const [product, setProduct] = useState<ProductDto>(() => {
+        const prod: ProductDto = prods.find(p => inventoryItem.productId == p.id) ?? productDtoNew;
 
-  const handleClick = () => {
-    navigate(`/product/${product?.id}`);
-  };
+        return {
+            id: inventoryItem.productId,
+            name: prod.name,
+            description: prod.description,
+            image: prod.image,
+            tags: prod.tags
+        }
+    });
 
-  return (
-    <div className='product-card' onClick={handleClick}>
-        <img className='product-card-img' src="https://placehold.co/150x180" alt="Product image" width="150" height="180" />
-        <h4 className='product-card-title'>{product?.name}</h4>
-        <div className='product-card-desc'>
-            <span className='product-card-description'>{product?.description}</span>
-            <span className='product-card-price'>Price</span>
+    const handleClick = () => {
+        navigate(`/product/${product?.id}`);
+    };
+
+    return (
+        <div className='product-card' onClick={handleClick}>
+            <img className='product-card-img' src="https://placehold.co/150x180" alt="Product image" width="150" height="180" />
+            <h4 className='product-card-title'>{product?.name}</h4>
+            <div className='product-card-desc'>
+                <span className='product-card-description'>{product?.description}</span>
+                <span className='product-card-price'>{toPrice(inventoryItem?.price)}</span>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default ProductCard
