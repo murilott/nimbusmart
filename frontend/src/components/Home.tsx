@@ -17,7 +17,7 @@ const prods: ProductDto[] = [
     {
         id: 2,
         name: "Teclado",
-        description: "Teclado Logitech",
+        description: "Teclado Logitech aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         tags: [],
         image: ""
     },
@@ -60,6 +60,7 @@ function Home() {
     return (
         <div className='content'>
             <h3>Products</h3>
+            <hr />
 
             <div>
                 <label htmlFor="">Search:</label>

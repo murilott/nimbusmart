@@ -1,31 +1,70 @@
 .header {
-    background-color: rgb(233, 255, 252);
+    background: linear-gradient(45deg, #50a5ff 2%, #e6e6e6 18%);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    z-index: 15;
+    /* box-shadow: inset 0 -5px 10px rgba(0, 0, 0, 0.1); */
+    /* border-bottom: 2px solid rgb(0, 156, 135); */
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
-    border-bottom: 2px solid rgb(0, 156, 135);
-}
-
-.header-opts {
-    display: flex;
     padding: 0px 20px;
     align-items: center;
 }
-.header-opts ul {
+.header-content ul {
     display: flex;
 }
 
-.header-opts ul li{
-    padding-right: 8px;
+.header-content ul li{
+    padding-right: 20px;
 }
 
-.auth-opts {
-    display: flex;
-    padding: 0px 20px;
-    align-items: center;
-    gap: 20px;
+.header-cart {
     margin-right: 10%;
 }
 
 .font-big {
-    font-size: 17px;
+    font-size: 19px;
+}
+
+.link-card {
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    align-items: center;
+    border: 1px solid rgb(6, 6, 145);
+    margin-right: 10px;
+}
+
+a {
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(180, 180, 180, 0.5);
+}
+
+a:link {
+  color: rgb(9, 5, 219);
+}
+
+a:visited {
+  color: purple;
+}
+
+a:hover {
+  color: rgb(197, 5, 5);
+}
+
+a:active {
+  color: rgb(4, 143, 124);
+}
+
+
+.logo-one {
+    color: rgb(66, 66, 66);
+    user-select: none;
+}
+
+.logo-two {
+    color: rgb(42, 42, 231);
+    user-select: none;
 }

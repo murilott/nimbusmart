@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { ProductDto } from '../types/ProductDto';
 import { productDtoNew } from '../new/ProductDto';
 import { useQuery } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
 import { inventoryItemNew } from '../new/InventoryItemDto';
 import "../style/productpage.css"
-import { toPrice } from '../helper/toPrice';
+import { toBrl } from '../helper/toPrice';
 
 const prods: ProductDto[] = [
     {
@@ -20,7 +20,7 @@ const prods: ProductDto[] = [
     {
         id: 2,
         name: "Teclado",
-        description: "Teclado Logitech",
+        description: "Teclado Logitech aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbc cccccccccccccccc ddddddddddddd",
         tags: [],
         image: ""
     },
@@ -56,6 +56,7 @@ const items: InventoryItemDto[] = [
 
 function ProductPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
     // const [product, setProduct] = useState<ProductDto>(productDtoNew);
 
     const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(() => {
@@ -95,11 +96,14 @@ function ProductPage() {
             <div className='product-page-body'>
                 <div className='product-page-info'>
                     <div className='product-page-return'>
-                        <a href="../">← Return</a>
+                        <button onClick={() => {
+                            navigate(`../`);
+                        }}>← Return</button>
                     </div>
 
                     <div>
                         <h2>{product?.name}</h2>
+                        <hr />
                     </div>
 
                     <div className='product-page-img'>
@@ -115,10 +119,11 @@ function ProductPage() {
                 </div>
 
                 <div className='product-page-checkout product-page-card'>
-                    <p><strong>Price: {toPrice(inventoryItem?.price)}</strong></p>
+                    <h3 className='product-page-addtocart'>Add to Cart</h3>
+                    <p><strong>Price: {toBrl(inventoryItem?.price)}</strong></p>
                     <p>Available: {inventoryItem?.quantity}</p>
                     <div>
-                        <label htmlFor="quantity">Quantity</label>
+                        <label htmlFor="quantity">Quantity: </label>
                         <input type="number" />
                     </div>
                     <button>Add to cart</button>

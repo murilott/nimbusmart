@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import type { ProductDto } from '../types/ProductDto';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
 import { productDtoNew } from '../new/ProductDto';
-import { toPrice } from '../helper/toPrice';
+import { toBrl } from '../helper/toPrice';
 
 interface ProductCardProps {
     inventoryItem: InventoryItemDto
@@ -21,7 +21,7 @@ const prods: ProductDto[] = [
     {
         id: 2,
         name: "Teclado",
-        description: "Teclado Logitech",
+        description: "Teclado Logitech aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         tags: [],
         image: ""
     },
@@ -58,7 +58,7 @@ function ProductCard({ inventoryItem }: ProductCardProps) {
             <h4 className='product-card-title'>{product?.name}</h4>
             <div className='product-card-desc'>
                 <span className='product-card-description'>{product?.description}</span>
-                <span className='product-card-price'>{toPrice(inventoryItem?.price)}</span>
+                <span className='product-card-price'>{toBrl(inventoryItem?.price)}</span>
             </div>
         </div>
     )
