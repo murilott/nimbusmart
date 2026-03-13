@@ -2,9 +2,6 @@
     font-family: "Sora", sans-serif;
 }
 
-.inventory-items-body {
-    display: flex;
-}
 
 .inventory-items-category {
     /* border: 2px solid gray; */
@@ -72,17 +69,15 @@
     background-color: rgb(232, 232, 236);
 }
 
-.inventory-actions {
+/* .inventory-actions {
     margin: 20px 0;
     display: flex;
     gap: 30px;
-}
+} */
 
-.inventory-items-body {
-    height: 50vh;
-}
 
-.inventory-actions-info {
+
+/* .inventory-actions-info {
     height: 25vh;
 }
 
@@ -90,13 +85,13 @@
     margin: 0;
     margin-bottom: 10px;
     border-bottom: 1px solid;
-}
+} */
 
 .inventory-list {
     overflow: auto;
     scrollbar-width: thin;
 }
 
-.inventory-item-editing {
+/* .inventory-item-editing {
     box-shadow: 0 10px 25px rgba(255, 186, 57, 0.5);
-}
+} */

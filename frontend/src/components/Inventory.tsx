@@ -97,7 +97,7 @@ const items: InventoryItemDto[] = [
 
 const invs: InventoryDto[] = [
     { id: 1, items: [], name: "Hardware", location: "Shelf A1", createdAt: new Date },
-    { id: 2, items: [...items], name: "Peripherials", location: "Shelf A2", createdAt: new Date },
+    { id: 2, items: [...items], name: "Peripherals", location: "Shelf A2", createdAt: new Date },
 ]
 
 function Inventory() {
@@ -212,7 +212,7 @@ function Inventory() {
 
             <p>Manage and create inventory items.</p>
 
-            <div className='inventory-items-body card'>
+            <div className='card-body card'>
                 <div className='inventory-items-category'>
                     <h4>Inventories</h4>
 
@@ -251,14 +251,14 @@ function Inventory() {
                 </div>
             </div>
 
-            <div className='inventory-actions'>
+            <div className='actions-bar'>
                 <button onClick={() => changeView("a")} disabled={selectedInventory == null}>New Item</button>
                 <button onClick={() => changeView("b")} disabled={selectedInventoryItem == null}>Edit Item</button>
 
                 <button onClick={() => changeView("c")}>New Inventory</button>
             </div>
 
-            <div className={`inventory-actions-info card ${bEditItem ? 'inventory-item-editing' : ''}`}>
+            <div className={`actions-info card ${bEditItem ? 'editing' : ''}`}>
 
                 {bNewItem &&
                     <div>

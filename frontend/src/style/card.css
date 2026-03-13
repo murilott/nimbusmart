@@ -4,3 +4,27 @@
     padding: 20px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
+
+.actions-info {
+    min-height: 25vh;
+}
+.actions-info h4 {
+    margin: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid;
+}
+
+.actions-bar {
+    margin: 20px 0;
+    display: flex;
+    gap: 30px;
+}
+
+.editing {
+    box-shadow: 0 10px 25px rgba(255, 186, 57, 0.5);
+}
+
+.card-body {
+    height: 50vh;
+    display: flex;
+}

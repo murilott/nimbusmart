@@ -1,6 +1,7 @@
 import './App.css'
 import '../src/style/base.css'
 import '../src/style/card.css'
+import '../src/style/table.css'
 import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home'
 import Header from './components/Header'
