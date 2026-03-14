@@ -23,6 +23,7 @@ table td {
 .products-table tr {
     height: 50px;
     cursor: pointer;
+    border-bottom: 1px solid #eee;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
@@ -53,4 +54,12 @@ table td {
     background-color: rgb(219, 218, 231);
     z-index: 1;
     box-shadow: inset 0 -2px 0 #ddd;
+}
+
+.products-table-selected {
+    background-color: rgb(238, 236, 255);
+}
+
+.products-table-selected:hover {
+    background-color: rgb(219, 215, 255) !important;
 }

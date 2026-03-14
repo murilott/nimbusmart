@@ -113,7 +113,9 @@ function Product() {
     };
 
     function createProduct() {
-        const payload = { ...productCreation };
+        let newTagList: string = productCreation.tags.split(",").map(item => item.trim().toLowerCase());
+
+        const payload = { ...productCreation, tags: newTagList };
 
         console.log(payload);
 
@@ -159,7 +161,7 @@ function Product() {
                         {prods.map((product) => (
                             <tr 
                                 key={product.id} 
-                                style={{ borderBottom: '1px solid #eee' }}
+                                className={`${product.id == selectedProduct?.id ? 'products-table-selected' : ''}`}
                                 onClick={() => selectProduct(product)}
                             >
                                 <td>{product.id}</td>
