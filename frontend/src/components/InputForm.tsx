@@ -47,7 +47,7 @@ function InputForm<T>({
                     ref={ref as Ref<HTMLSelectElement>}
                     className='input-form-option'
                 >
-                    <option value="null">None</option>
+                    <option value="">None</option>
 
                     {options.map((op, idx) => (
                         <option

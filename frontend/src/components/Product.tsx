@@ -113,7 +113,7 @@ function Product() {
     };
 
     function createProduct() {
-        let newTagList: string = productCreation.tags.split(",").map(item => item.trim().toLowerCase());
+        const newTagList: string[] = productCreation.tags.split(",").map(item => item.trim().toLowerCase());
 
         const payload = { ...productCreation, tags: newTagList };
 
@@ -122,16 +122,15 @@ function Product() {
     }
 
     function editingProduct() {
-        const payload = { ...productCreation };
+        const payload = { ...editProduct };
 
         console.log(payload);
     }
 
     function selectProduct(product: ProductDto) {
         setSelectedProduct(product);
-        setEditProduct({ name: product.name, description: product.description, image: product.image, tags: product.tags });
+        setEditProduct({ name: product.name, description: product.description, image: product.image, tags: product.tags.toString() });
         console.log(product);
-        
     }
 
     return (
@@ -159,8 +158,8 @@ function Product() {
                     </thead>
                     <tbody>
                         {prods.map((product) => (
-                            <tr 
-                                key={product.id} 
+                            <tr
+                                key={product.id}
                                 className={`${product.id == selectedProduct?.id ? 'products-table-selected' : ''}`}
                                 onClick={() => selectProduct(product)}
                             >
