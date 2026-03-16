@@ -17,7 +17,7 @@ function Header() {
                     <li><Link to="/payment">Payment</Link></li>
                 </ul>
 
-                <a href="#" className='header-cart font-big'>Cart</a>
+                <span className='header-cart font-big'><Link to="/cart">Cart</Link></span>
             </div>
         </div>
     )

@@ -2,7 +2,6 @@
     font-family: "Sora", sans-serif;
 }
 
-
 .inventory-items-category {
     /* border: 2px solid gray; */
     border-radius: 20px;
@@ -40,17 +39,19 @@
     box-shadow: inset 0 0 8px rgba(0, 123, 255, 0.2);
     transition: box-shadow 0.2s ease;
 }
-.inventory-items-category-selected, .inventory-items-category ul li:active {
-    background-color: #f0f4f8; 
-  
-  border: 1px solid #09346d; 
-  
-  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), 
-              inset -1px -1px 2px rgba(255, 255, 255, 0.5);
-              
-  color: #093a75; 
-  
-  outline: none; 
+
+.inventory-items-category-selected,
+.inventory-items-category ul li:active {
+    background-color: #f0f4f8;
+
+    border: 1px solid #09346d;
+
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1),
+        inset -1px -1px 2px rgba(255, 255, 255, 0.5);
+
+    color: #093a75;
+
+    outline: none;
 }
 
 .inventory-items-list {

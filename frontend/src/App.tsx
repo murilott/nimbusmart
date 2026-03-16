@@ -10,6 +10,7 @@ import Delivery from './components/Delivery'
 import Product from './components/Product'
 import ProductPage from './components/ProductPage'
 import Payment from './components/Payment'
+import Cart from './components/Cart'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/product" element={<Product />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </div>
   )
