@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import type { OrderDto } from '../types/OrderDto'
 import "../style/cart.css"
 import CheckoutPopup from './CheckoutPopup'
+import { toBrl } from '../helper/toPrice'
 
 const carts: OrderItemDto[] = [
     {
@@ -51,12 +52,16 @@ const carts: OrderItemDto[] = [
     },
 ]
 
-const order: OrderDto = {
-
+const orderObj: OrderDto = {
+    id: 1,
+    items: [],
+    status: 'PENDING',
+    totalCost: new BigNumber(150),
 }
 
 function Cart() {
     const [ isCheckoutOpen, setIsCheckoutOpen ] = useState<boolean>(false);
+    const [order, setOrder] = useState<OrderDto>(orderObj);
 
     function toCheckout(open: boolean) {
         setIsCheckoutOpen(open);
@@ -88,13 +93,13 @@ function Cart() {
                     <div className='cart-checkout-actions'>
                         <button onClick={() => toCheckout(true)}>Checkout</button>
 
-                        <p>Total: R$ 200.99</p>
+                        <p>Total: {toBrl(order.totalCost)}</p>
                     </div>
                 </div>
             </div>
 
             {isCheckoutOpen && 
-                <CheckoutPopup toggle={(open) => toCheckout(open)} />
+                <CheckoutPopup order={order} setOrder={setOrder} toggle={(open) => toCheckout(open)} />
             }
         </div>
     )

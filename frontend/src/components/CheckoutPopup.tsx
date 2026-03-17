@@ -10,6 +10,8 @@ import type { OrderDto } from '../types/OrderDto';
 
 interface CheckoutPopupProps {
     toggle: (open: boolean) => void,
+    order: OrderDto,
+    setOrder: (order: OrderDto) => void;
 }
 
 const pays: PaymentDto[] = [
@@ -39,16 +41,11 @@ const pays: PaymentDto[] = [
     },
 ]
 
-const orderObj: OrderDto = {
-    id: 1,
-    items: [],
-    status: 'PENDING',
-    totalCost: new BigNumber(150),
-}
 
-function CheckoutPopup({ toggle }: CheckoutPopupProps) {
+
+function CheckoutPopup({ toggle, order, setOrder }: CheckoutPopupProps) {
     const [transaction, setTransaction] = useState<TransactionCreationRequest>(transactionCreationNew);
-    const [order, setOrder] = useState<OrderDto>(orderObj);
+    
     const [payment, setPayment] = useState<PaymentDto>();
 
     const handleTransactionCreation = (e:
@@ -71,6 +68,15 @@ function CheckoutPopup({ toggle }: CheckoutPopupProps) {
         setPayment(pay);
     }, [transaction.paymentId])
 
+    function buy() {
+        const payload: TransactionCreationRequest = {
+            ...transaction,
+            orderId: order.id
+        }
+
+        console.log(payload);
+        
+    }
 
     return (
         <div>
@@ -129,7 +135,7 @@ function CheckoutPopup({ toggle }: CheckoutPopupProps) {
 
                 <div className='popup-card-actions'>
                     <button onClick={togglePopup}>Close</button>
-                    <button onClick={togglePopup} disabled={
+                    <button onClick={buy} disabled={
                         ((payment?.method == "DEBIT" ||
                         payment?.method == "PIX") && order.totalCost.isGreaterThan(payment?.funds ?? 0))
                         || !payment
