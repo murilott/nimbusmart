@@ -1,0 +1,11 @@
+.cart-checkout-actions {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 20px;
+}
+
+.cart-item-list {
+    height: 55vh;
+    overflow: auto;
+    scrollbar-width: thin;
+}

@@ -1,0 +1,47 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+}
+
+.popup-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  width: 50%;
+  height: 40%;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-card-info {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    margin: 0 30px;
+    font-size: 15px;
+}
+
+.popup-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.popup-card-info > p {
+    align-self: center;
+}

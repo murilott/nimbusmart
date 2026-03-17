@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CartItem from './CartItem'
 import type { OrderItemDto } from '../types/OrderItemDto'
 import BigNumber from 'bignumber.js'
+import type { OrderDto } from '../types/OrderDto'
+import "../style/cart.css"
+import CheckoutPopup from './CheckoutPopup'
 
 const carts: OrderItemDto[] = [
     {
@@ -25,9 +28,40 @@ const carts: OrderItemDto[] = [
         quantity: 2,
         cost: new BigNumber(120),
     },
+    {
+        id: 3,
+        itemId: 3,
+        itemCost: new BigNumber(60),
+        quantity: 2,
+        cost: new BigNumber(120),
+    },
+    {
+        id: 3,
+        itemId: 3,
+        itemCost: new BigNumber(60),
+        quantity: 2,
+        cost: new BigNumber(120),
+    },
+    {
+        id: 3,
+        itemId: 3,
+        itemCost: new BigNumber(60),
+        quantity: 2,
+        cost: new BigNumber(120),
+    },
 ]
 
+const order: OrderDto = {
+
+}
+
 function Cart() {
+    const [ isCheckoutOpen, setIsCheckoutOpen ] = useState<boolean>(false);
+
+    function toCheckout(open: boolean) {
+        setIsCheckoutOpen(open);
+    }
+
     return (
         <div className='content'>
             <h3>Cart: {carts.length} item(s)</h3>
@@ -35,17 +69,33 @@ function Cart() {
             <hr />
 
             <div className='card'>
-                {carts?.map((orderItem) => (
-                    // <li
-                    //     onClick={() => selectInventory(inv)}
-                    //     className={`${selectedInventory?.id == inv.id
-                    //         ? 'inventory-items-category-selected'
-                    //         : ''
-                    //         }`}
-                    // >{inv.name}</li>
-                    <CartItem orderItem={orderItem} />
-                ))}
+                <div className='cart-item-list'>
+                    {carts?.map((orderItem) => (
+                        // <li
+                        //     onClick={() => selectInventory(inv)}
+                        //     className={`${selectedInventory?.id == inv.id
+                        //         ? 'inventory-items-category-selected'
+                        //         : ''
+                        //         }`}
+                        // >{inv.name}</li>
+                        <CartItem orderItem={orderItem} />
+                    ))}
+                </div>
+
+                <div>
+                    <hr />
+
+                    <div className='cart-checkout-actions'>
+                        <button onClick={() => toCheckout(true)}>Checkout</button>
+
+                        <p>Total: R$ 200.99</p>
+                    </div>
+                </div>
             </div>
+
+            {isCheckoutOpen && 
+                <CheckoutPopup toggle={(open) => toCheckout(open)} />
+            }
         </div>
     )
 }

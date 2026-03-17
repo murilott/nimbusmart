@@ -6,6 +6,7 @@ import type { InventoryItemDto } from '../types/InventoryItemDto';
 import { inventoryItemNew } from '../new/InventoryItemDto';
 import { productNew } from '../new/ProductDto';
 import "../style/cartitem.css"
+import { toBrl } from '../helper/toPrice';
 
 interface CartItemProps {
     orderItem: OrderItemDto,
@@ -93,12 +94,12 @@ function CartItem({ orderItem }: CartItemProps) {
 
             <div className='cart-item-cost'>
                 <div>
-                    <p>Unit Cost: {orderItem.itemCost.toString()}</p>
+                    <p>Unit Cost: {toBrl(orderItem.itemCost)}</p>
                     <p>Quantity: {orderItem.quantity}</p>
                 </div>
 
                 <div>
-                    <p>Total: {orderItem.cost.toString()}</p>
+                    <p>Total: {toBrl(orderItem.cost)}</p>
                 </div>
             </div>
         </div>

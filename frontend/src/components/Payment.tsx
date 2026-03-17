@@ -113,9 +113,9 @@ function Payment() {
                             <th>ID</th>
                             <th>Name</th>
                             <th>Method</th>
-                            <th>Funds</th>
-                            <th>Credit Limit</th>
-                            <th>Limit Spent</th>
+                            <th>Funds (R$)</th>
+                            <th>Credit Limit (R$)</th>
+                            <th>Limit Spent (R$)</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -9,7 +9,7 @@
     max-height: 100px;
     width: 100%;
     user-select: none;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     background: linear-gradient(135deg, #cbd5e1, #f8fafc, #e9d5ff);
     box-shadow: 0 4px 12px rgba(148, 163, 184, 0.15);
 }
@@ -28,7 +28,7 @@
 }
 
 .cart-item-info {
-    width: 65%;
+    width: 60%;
     max-height: 80%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -37,7 +37,7 @@
 
 .cart-item-cost {
     display: flex;
-    width: 35%;
+    width: 40%;
     justify-content: center;
     font-size: 14px;
     /* gap: 60px; */
@@ -56,7 +56,6 @@
 }
 
 .cart-item-info-name {
-    
     text-overflow: ellipsis;
     width: 80%;
 }
