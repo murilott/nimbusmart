@@ -1,0 +1,75 @@
+.delivery-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.delivery-column > h4 {
+    margin: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid;
+}
+
+.delivery-column > button {
+    margin-top: auto;
+}
+
+.delivery-column-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.delivery-column-shipment-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: auto;
+    align-items: center;
+    scrollbar-width: thin;
+    margin-bottom: 10px;
+}
+
+.delivery-column-shipment-list > div {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(209, 209, 245);
+    text-align: center;
+    width: 80%;
+    user-select: none;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.delivery-column-shipment-list > div:hover {
+    background-color: rgb(231, 231, 248);
+}
+
+.delivery-column-shipment-list > div:active {
+    transform: scale(0.98); 
+}
+
+.shipment-selected {
+    background-color: rgb(184, 184, 247) !important;
+}
+
+.shipment-info {
+
+}
+
+.shipment-info > h4 {
+    margin: 0;
+}
+
+.shipment-info-details {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    gap: 10px;
+}
+
+.shipment-info-details > p{
+    margin: 0;
+    gap: 10px;
+}

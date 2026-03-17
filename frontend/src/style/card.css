@@ -28,3 +28,14 @@
     height: 50vh;
     display: flex;
 }
+
+.card-column {
+    height: 45vh;
+    width: 25%;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.card-footer {
+    height: 20vh;
+}

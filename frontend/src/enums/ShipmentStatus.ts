@@ -1,0 +1,1 @@
+export type ShipmentStatus = "PENDING" | "IN_TRANSIT" | "DELIVERED" | "FAILED";
