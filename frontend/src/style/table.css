@@ -17,7 +17,8 @@ table td {
     flex-wrap: wrap;
     font-size: 14px;
     overflow: auto;
-    table-layout: fixed
+    table-layout: fixed;
+    user-select: none;
 }
 
 .products-table tr {

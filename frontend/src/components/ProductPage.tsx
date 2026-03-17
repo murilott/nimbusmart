@@ -8,6 +8,9 @@ import type { InventoryItemDto } from '../types/InventoryItemDto';
 import { inventoryItemNew } from '../new/InventoryItemDto';
 import "../style/productpage.css"
 import { toBrl } from '../helper/toPrice';
+import InputForm from './InputForm';
+import type { OrderItemCreationRequest } from '../dto/request/OrderItemCreationRequest';
+import { OrderItemCreationNew } from '../new/request/OrderItemCreationRequest';
 
 const prods: ProductDto[] = [
     {
@@ -58,6 +61,7 @@ function ProductPage() {
     const { id } = useParams();
     const navigate = useNavigate();
     // const [product, setProduct] = useState<ProductDto>(productDtoNew);
+    const [orderItem, setOrderItem] = useState<OrderItemCreationRequest>(OrderItemCreationNew);
 
     const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(() => {
         const item: InventoryItemDto = items.find(p => id == p.productId?.toString()) ?? inventoryItemNew;
@@ -82,6 +86,17 @@ function ProductPage() {
         }
     });
 
+    const handleOrderItem = (e:
+        React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
+    ) => {
+        const { name, value } = e.target;
+
+        setOrderItem((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
     // const { inventoryItem, isLoading, isError, error } = useQuery({
     //     queryKey: ['inventoryItem', id], // 2. O ID na Key força o refetch se a URL mudar
     //     // queryFn: () => fetchProduct(id), // 3. Passa o ID para a função de fetch
@@ -90,6 +105,19 @@ function ProductPage() {
 
     // if (isLoading) return <div>Carregando...</div>;
     // if (isError) return <div>Erro: {error.message}</div>;
+
+    function addToCart() {
+        console.log("dsss");
+        
+        const payload: OrderItemCreationRequest = {
+            ...orderItem,
+            inventoryItemId: inventoryItem.id,
+            orderId: 1
+        }
+
+        console.log(payload);
+        
+    }
 
     return (
         <div className='content'>
@@ -122,11 +150,16 @@ function ProductPage() {
                     <h3 className='product-page-addtocart'>Add to Cart</h3>
                     <p><strong>Price: {toBrl(inventoryItem?.price)}</strong></p>
                     <p>Available: {inventoryItem?.quantity}</p>
-                    <div>
-                        <label htmlFor="quantity">Quantity: </label>
-                        <input type="number" />
-                    </div>
-                    <button>Add to cart</button>
+
+                    <InputForm
+                        field='Quantity:'
+                        type='number'
+                        name='quantity'
+                        value={orderItem.quantity}
+                        onChange={handleOrderItem}
+                    />
+
+                    <button onClick={addToCart}>Add to cart</button>
                 </div>
 
             </div>
