@@ -5,6 +5,8 @@ import type { PaymentCreationRequest } from '../dto/request/PaymentCreationReque
 import { paymentCreationNew } from '../new/request/PaymentCreationRequest';
 import BigNumber from 'bignumber.js';
 import InputForm from './InputForm';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createPayment, listPayments } from '../service/payment.service';
 
 const pays: PaymentDto[] = [
     {
@@ -41,6 +43,8 @@ function Payment() {
 
     const [bNewPayment, setBNewPayment] = useState<boolean>(false);
     const [bEditPayment, setBEditPayment] = useState<boolean>(false);
+    
+    const queryClient = useQueryClient();
 
     function changeView(opt: string) {
         if (opt === "a") {
@@ -75,11 +79,23 @@ function Payment() {
         }));
     };
 
-    function createPayment() {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: createPayment,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['payments'] });
+        },
+    });
+    
+
+    async function creatingPayment() {
         const payload = { ...paymentCreation };
 
-        console.log(payload);
-
+        try {
+            const response = await mutateAsync(payload);
+            console.log("Response created: " + response.toString());
+        } catch (err: unknown) {
+            console.error("Unexpected error:", err);
+        }
     }
 
     function editingPayment() {
@@ -93,6 +109,11 @@ function Payment() {
         setEditPayment({ name: payment.name, method: payment.method, creditLimit: payment.creditLimit, funds: payment.funds });
         console.log(payment);
     }
+
+    const { isLoading, error, data: products } = useQuery<PaymentDto[]>({
+        queryKey: ['payments'],
+        queryFn: listPayments,
+    });
 
     return (
         <div className='content'>
@@ -189,7 +210,7 @@ function Payment() {
                             disabled={paymentCreation.method != "CREDIT"}
                         />
 
-                        <button onClick={createPayment} disabled={paymentCreation.name.trim() == "" || !paymentCreation.method}>Add payment</button>
+                        <button onClick={creatingPayment} disabled={paymentCreation.name.trim() == "" || !paymentCreation.method}>Add payment</button>
                     </div>
                 }
 

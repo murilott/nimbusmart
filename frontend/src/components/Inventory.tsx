@@ -13,6 +13,8 @@ import type { InventoryItemCreationRequest } from '../dto/request/InventoryItemC
 import { inventoryItemCreationNew } from '../new/request/InventoryItemCreationRequest';
 import type { InventoryDto } from '../types/InventoryDto';
 import InventoryItemCard from './InventoryItemCard';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createInventory, createInventoryItem, listInventories, listInventoryItems } from '../service/inventory.service';
 
 const prods: ProductDto[] = [
     {
@@ -114,6 +116,8 @@ function Inventory() {
     const [bNewItem, setBNewItem] = useState<boolean>(false);
     const [bEditItem, setBEditItem] = useState<boolean>(false);
 
+    const queryClient = useQueryClient();
+
     const handleInventoryItem = (e:
         React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
     ) => {
@@ -169,10 +173,29 @@ function Inventory() {
         }
     }
 
-    function createItem() {
+    const { mutateAsync: createInventoryMutate, isPending: isInvCreationPending } = useMutation({
+        mutationFn: createInventory,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventories'] });
+        },
+    });
+
+    const { mutateAsync: createInventoryItemMutate, isPending: isInvItemCreationPending } = useMutation({
+        mutationFn: createInventoryItem,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+        },
+    });
+
+    async function creatingItem() {
         const payload = { ...inventoryItemCreation };
 
-        console.log(payload);
+        try {
+            const response = await createInventoryItemMutate(payload);
+            console.log("Response created: " + response.toString());
+        } catch (err: unknown) {
+            console.error("Unexpected error:", err);
+        }
     }
 
     function editItem() {
@@ -186,10 +209,15 @@ function Inventory() {
         console.log("New edited item: ", payload);
     }
 
-    function createInventory() {
+    async function creatingInventory() {
         const payload = { ...inventoryCreation };
 
-        console.log(payload);
+        try {
+            const response = await createInventoryMutate(payload);
+            console.log("Response created: " + response.toString());
+        } catch (err: unknown) {
+            console.error("Unexpected error:", err);
+        }
     }
 
     function selectInventory(inv: InventoryDto) {
@@ -203,6 +231,11 @@ function Inventory() {
         setSelectedInventoryItem(item);        
         setEditInventoryItem({price: item.price, productId: item.productId ?? 0, quantity: item.quantity});
     }
+
+    const { isLoading: isInventoryListLoading, error: listInventoryError, data: inventories } = useQuery<InventoryDto[]>({
+        queryKey: ['inventories'],
+        queryFn: listInventories,
+    });
 
     return (
         <div className='content inventory'>
@@ -289,7 +322,7 @@ function Inventory() {
                             onChange={handleInventoryItem}
                         />
 
-                        <button onClick={createItem}>Add item</button>
+                        <button onClick={creatingItem}>Add item</button>
                     </div>
                 }
 
@@ -346,7 +379,7 @@ function Inventory() {
                             onChange={handleInventoryCreation}
                         />
 
-                        <button onClick={createInventory}>Create inventory</button>
+                        <button onClick={creatingInventory}>Create inventory</button>
                     </div>
                 }
 

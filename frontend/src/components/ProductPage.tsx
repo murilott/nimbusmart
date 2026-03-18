@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import type { ProductDto } from '../types/ProductDto';
 import { productNew } from '../new/ProductDto';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
 import { inventoryItemNew } from '../new/InventoryItemDto';
@@ -63,6 +63,8 @@ function ProductPage() {
     // const [product, setProduct] = useState<ProductDto>(productDtoNew);
     const [orderItem, setOrderItem] = useState<OrderItemCreationRequest>(OrderItemCreationNew);
 
+    const queryClient = useQueryClient();
+
     const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(() => {
         const item: InventoryItemDto = items.find(p => id == p.productId?.toString()) ?? inventoryItemNew;
 
@@ -106,9 +108,7 @@ function ProductPage() {
     // if (isLoading) return <div>Carregando...</div>;
     // if (isError) return <div>Erro: {error.message}</div>;
 
-    function addToCart() {
-        console.log("dsss");
-        
+    function addToCart() {        
         const payload: OrderItemCreationRequest = {
             ...orderItem,
             inventoryItemId: inventoryItem.id,
@@ -118,6 +118,13 @@ function ProductPage() {
         console.log(payload);
         
     }
+
+    // const { mutateAsync, isPending } = useMutation({
+    //     mutationFn: createOrderItem,
+    //     onSuccess: () => {
+    //         queryClient.invalidateQueries({ queryKey: ['payments'] });
+    //     },
+    // });
 
     return (
         <div className='content'>

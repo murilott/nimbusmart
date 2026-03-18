@@ -21,8 +21,8 @@ export const createInventory = async (
     return response.data;
 };
 
-export const listInventoryItems = async (): Promise<InventoryDto[]> => {
-  const response = await api.get<InventoryDto[]>("/api/v1/inventory-item");
+export const listInventoryItems = async (): Promise<InventoryItemDto[]> => {
+  const response = await api.get<InventoryItemDto[]>("/api/v1/inventory-item");
 
   return response.data;
 };

@@ -1,10 +1,11 @@
 import React from 'react'
 import "../style/home.css"
 import ProductCard from './ProductCard'
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
 import type { ProductDto } from '../types/ProductDto';
 import BigNumber from 'bignumber.js';
+import { listInventoryItems } from '../service/inventory.service';
 
 const prods: ProductDto[] = [
     {
@@ -56,6 +57,13 @@ function Home() {
     //     queryKey: ['inventoryItem'],
     //     // queryFn: () => fetchProduct(id), // 3. Passa o ID para a função de fetch
     // });
+
+    const queryClient = useQueryClient();
+
+    const { isLoading, error, data: inventoryItems } = useQuery<InventoryItemDto[]>({
+            queryKey: ['inventoryItems'],
+            queryFn: listInventoryItems,
+        });
 
     return (
         <div className='content'>

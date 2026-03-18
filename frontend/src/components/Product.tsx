@@ -3,6 +3,8 @@ import type { ProductDto } from '../types/ProductDto';
 import type { ProductCreationRequest } from '../dto/request/ProductCreationRequest';
 import { productCreationNew } from '../new/request/ProductCreationRequest';
 import InputForm from './InputForm';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createProduct, listProducts } from '../service/product.service';
 
 const prods: ProductDto[] = [
     {
@@ -79,6 +81,8 @@ function Product() {
     const [bNewProduct, setBNewProduct] = useState<boolean>(false);
     const [bEditProduct, setBEditProduct] = useState<boolean>(false);
 
+    const queryClient = useQueryClient();
+
     function changeView(opt: string) {
         if (opt === "a") {
             setBNewProduct(true);
@@ -112,13 +116,25 @@ function Product() {
         }));
     };
 
-    function createProduct() {
-        const newTagList: string[] = productCreation.tags.split(",").map(item => item.trim().toLowerCase());
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: createProduct,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['products'] });
+        },
+    });
 
-        const payload = { ...productCreation, tags: newTagList };
+    async function creatingProduct() {
+        // const newTagList: string[] = productCreation.tags.split(",").map(item => item.trim().toLowerCase());
+        // tags: newTagList
 
-        console.log(payload);
+        const payload: ProductCreationRequest = { ...productCreation };
 
+        try {
+            const response = await mutateAsync(payload);
+            console.log("Response created: " + response.toString());
+        } catch (err: unknown) {
+            console.error("Unexpected error:", err);
+        }
     }
 
     function editingProduct() {
@@ -132,6 +148,11 @@ function Product() {
         setEditProduct({ name: product.name, description: product.description, image: product.image, tags: product.tags.toString() });
         console.log(product);
     }
+
+    const { isLoading, error, data: products } = useQuery<ProductDto[]>({
+        queryKey: ['products'],
+        queryFn: listProducts,
+    });
 
     return (
         <div className='content'>
@@ -227,7 +248,7 @@ function Product() {
                             onChange={handleProductCreation}
                         />
 
-                        <button onClick={createProduct}>Add item</button>
+                        <button onClick={creatingProduct}>Add item</button>
                     </div>
                 }
 

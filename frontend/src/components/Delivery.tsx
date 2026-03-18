@@ -3,6 +3,9 @@ import "../style/delivery.css"
 import type { ShipmentDto } from '../types/ShipmentDto'
 import { shipmentNew } from '../new/ShipmentDto'
 import { formatDate } from '../helper/formatDate';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { DeliveryTrackingDto } from '../types/DeliveryTrackingDto';
+import { listDeliveryTracking, nextDeliver, nextDelivered } from '../service/delivery.service';
 
 const ships: ShipmentDto[] = [
     {
@@ -53,6 +56,27 @@ const ships: ShipmentDto[] = [
 
 function Delivery() {
     const [selectedShipment, setSelectedShipment] = useState<ShipmentDto | null>();
+
+    const queryClient = useQueryClient();
+
+    const { mutateAsync: mNextDeliver, isPending } = useMutation({
+        mutationFn: nextDeliver,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['deliveryTracking'] });
+        },
+    });
+
+    const { mutateAsync: mNextDelivering, isPending: isDeliveredPending } = useMutation({
+        mutationFn: nextDelivered,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['deliveryTracking'] });
+        },
+    });
+
+    const { isLoading, error, data: deliveryTracking } = useQuery<DeliveryTrackingDto[]>({
+        queryKey: ['deliveryTracking'],
+        queryFn: listDeliveryTracking,
+    });
 
     function selectShipment(shipment: ShipmentDto) {
         setSelectedShipment(shipment);
