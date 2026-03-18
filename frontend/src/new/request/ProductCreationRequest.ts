@@ -4,5 +4,5 @@ export const productCreationNew: ProductCreationRequest = {
     name: "",
     description: "",
     image: "",
-    tags: [],
+    tags: "", // TODO: change backend tags type too 
 }

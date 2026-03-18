@@ -14,3 +14,7 @@ service-discovery
 
 fazer:
 order confirmada, kafka pra delivery (orderCOnfirmedHandler)
+
+refatorar o order: classe newOrder procura pelo primeiro order na lista com status pendning. 
+    se não encontrar, cria um e usa esse.
+    parecido com o delivery na parte de deliverytracking
