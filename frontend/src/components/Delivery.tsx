@@ -119,7 +119,7 @@ function Delivery() {
 
             <div className='card card-footer shipment-info'>
                 {selectedShipment ?
-                    <h4>Shipment {selectedShipment.id}</h4>
+                    <h4>Shipment {selectedShipment.id} - x item(s)</h4>
                     :
                     <h4>Select a shipment</h4>
                 }
