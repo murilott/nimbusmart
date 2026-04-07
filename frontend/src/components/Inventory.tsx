@@ -250,7 +250,7 @@ function Inventory() {
                     <h4>Inventories</h4>
 
                     <ul className='inventory-list'>
-                        {invs?.map((inv) => (
+                        {inventories?.map((inv) => (
                             <li 
                                 onClick={() => selectInventory(inv)}
                                 className={`${selectedInventory?.id == inv.id 

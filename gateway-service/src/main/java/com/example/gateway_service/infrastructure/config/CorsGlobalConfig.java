@@ -17,13 +17,13 @@ public class CorsGlobalConfig {
         CorsConfiguration config = new CorsConfiguration();
         
         config.setAllowedOrigins(List.of(
-            "https://accursed-phantasm-5j9xqj59jqr2r6j-3001.app.github.dev",
-            "https://accursed-phantasm-5j9xqj59jqr2r6j-3000.app.github.dev"
+            "https://turbo-succotash-qjxpqj6x544f9j7r-3000.app.github.dev",
+            "https://turbo-succotash-qjxpqj6x544f9j7r-8080.app.github.dev"
         ));
 
         config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
