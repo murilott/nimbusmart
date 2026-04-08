@@ -5,9 +5,11 @@ import type { ProductDto } from '../types/ProductDto';
 import type { InventoryItemDto } from '../types/InventoryItemDto';
 import { productNew } from '../new/ProductDto';
 import { toBrl } from '../helper/toPrice';
+import BigNumber from 'bignumber.js';
 
 interface ProductCardProps {
-    inventoryItem: InventoryItemDto
+    inventoryItem: InventoryItemDto,
+    products?: ProductDto[],
 }
 
 const prods: ProductDto[] = [
@@ -34,10 +36,10 @@ const prods: ProductDto[] = [
     },
 ]
 
-function ProductCard({ inventoryItem }: ProductCardProps) {
+function ProductCard({ inventoryItem, products }: ProductCardProps) {
     const navigate = useNavigate();
     const [product, setProduct] = useState<ProductDto>(() => {
-        const prod: ProductDto = prods.find(p => inventoryItem.productId == p.id) ?? productNew;
+        const prod: ProductDto = products?.find(p => inventoryItem.productId == p.id) ?? productNew;
 
         return {
             id: inventoryItem.productId,
@@ -58,7 +60,7 @@ function ProductCard({ inventoryItem }: ProductCardProps) {
             <h4 className='product-card-title'>{product?.name}</h4>
             <div className='product-card-desc'>
                 <span className='product-card-description'>{product?.description}</span>
-                <span className='product-card-price'>{toBrl(inventoryItem?.price)}</span>
+                <span className='product-card-price'>{toBrl(new BigNumber(inventoryItem?.price))}</span>
             </div>
         </div>
     )

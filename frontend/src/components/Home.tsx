@@ -6,6 +6,7 @@ import type { InventoryItemDto } from '../types/InventoryItemDto';
 import type { ProductDto } from '../types/ProductDto';
 import BigNumber from 'bignumber.js';
 import { listInventoryItems } from '../service/inventory.service';
+import { listProducts } from '../service/product.service';
 
 const prods: ProductDto[] = [
     {
@@ -61,9 +62,14 @@ function Home() {
     const queryClient = useQueryClient();
 
     const { isLoading, error, data: inventoryItems } = useQuery<InventoryItemDto[]>({
-            queryKey: ['inventoryItems'],
-            queryFn: listInventoryItems,
-        });
+        queryKey: ['inventoryItems'],
+        queryFn: listInventoryItems,
+    });
+
+    const { data: products } = useQuery<ProductDto[]>({
+        queryKey: ['products'],
+        queryFn: listProducts,
+    });
 
     return (
         <div className='content'>
@@ -81,19 +87,9 @@ function Home() {
                         <p>No inventoryItemList found.</p>
                     } */}
 
-                    {items?.map((item) => (
-                        <ProductCard inventoryItem={item} />
+                    {inventoryItems?.map((item) => (
+                        <ProductCard inventoryItem={item} products={products ?? []}/>
                     ))}
-                    {/* <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' />
-                    <ProductCard name='Product' description='Description...' price='R$ 49,99' /> */}
                 </div>
             </div>
         </div>

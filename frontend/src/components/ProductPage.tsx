@@ -11,6 +11,8 @@ import { toBrl } from '../helper/toPrice';
 import InputForm from './InputForm';
 import type { OrderItemCreationRequest } from '../dto/request/OrderItemCreationRequest';
 import { OrderItemCreationNew } from '../new/request/OrderItemCreationRequest';
+import { listProducts } from '../service/product.service';
+import { listInventoryItems } from '../service/inventory.service';
 
 const prods: ProductDto[] = [
     {
@@ -65,8 +67,18 @@ function ProductPage() {
 
     const queryClient = useQueryClient();
 
+    const { data: products } = useQuery<ProductDto[]>({
+        queryKey: ['products'],
+        queryFn: listProducts,
+    });
+
+    const { data: inventoryItems } = useQuery<InventoryItemDto[]>({
+            queryKey: ['inventoryItems'],
+            queryFn: listInventoryItems,
+        });
+
     const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(() => {
-        const item: InventoryItemDto = items.find(p => id == p.productId?.toString()) ?? inventoryItemNew;
+        const item: InventoryItemDto = inventoryItems?.find(p => id == p.productId?.toString()) ?? inventoryItemNew;
 
         return {
             id: item.id,
@@ -77,7 +89,7 @@ function ProductPage() {
     });
 
     const [product, setProduct] = useState<ProductDto>(() => {
-        const prod: ProductDto = prods.find(p => id == p.id?.toString()) ?? productNew;
+        const prod: ProductDto = products?.find(p => id == p.id?.toString()) ?? productNew;
 
         return {
             id: prod.id,
@@ -108,7 +120,7 @@ function ProductPage() {
     // if (isLoading) return <div>Carregando...</div>;
     // if (isError) return <div>Erro: {error.message}</div>;
 
-    function addToCart() {        
+    function addToCart() {
         const payload: OrderItemCreationRequest = {
             ...orderItem,
             inventoryItemId: inventoryItem.id,
@@ -116,7 +128,7 @@ function ProductPage() {
         }
 
         console.log(payload);
-        
+
     }
 
     // const { mutateAsync, isPending } = useMutation({
@@ -155,7 +167,7 @@ function ProductPage() {
 
                 <div className='product-page-checkout card'>
                     <h3 className='product-page-addtocart'>Add to Cart</h3>
-                    <p><strong>Price: {toBrl(inventoryItem?.price)}</strong></p>
+                    <p><strong>Price: {toBrl(new BigNumber(inventoryItem?.price))}</strong></p>
                     <p>Available: {inventoryItem?.quantity}</p>
 
                     <InputForm
