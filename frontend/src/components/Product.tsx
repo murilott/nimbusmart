@@ -244,6 +244,7 @@ function Product() {
                             field='Tags:'
                             type='text'
                             name='tags'
+                            placeholder='tag1,tag2,tag3'
                             value={productCreation.tags}
                             onChange={handleProductCreation}
                         />

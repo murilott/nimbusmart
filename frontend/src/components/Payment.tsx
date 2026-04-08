@@ -43,7 +43,7 @@ function Payment() {
 
     const [bNewPayment, setBNewPayment] = useState<boolean>(false);
     const [bEditPayment, setBEditPayment] = useState<boolean>(false);
-    
+
     const queryClient = useQueryClient();
 
     function changeView(opt: string) {
@@ -85,7 +85,7 @@ function Payment() {
             queryClient.invalidateQueries({ queryKey: ['payments'] });
         },
     });
-    
+
 
     async function creatingPayment() {
         const payload = { ...paymentCreation };
@@ -93,6 +93,7 @@ function Payment() {
         try {
             const response = await mutateAsync(payload);
             console.log("Response created: " + response.toString());
+            setPaymentCreation({ ...paymentCreationNew });
         } catch (err: unknown) {
             console.error("Unexpected error:", err);
         }
@@ -110,7 +111,7 @@ function Payment() {
         console.log(payment);
     }
 
-    const { isLoading, error, data: products } = useQuery<PaymentDto[]>({
+    const { isLoading, error, data: payments } = useQuery<PaymentDto[]>({
         queryKey: ['payments'],
         queryFn: listPayments,
     });
@@ -119,49 +120,51 @@ function Payment() {
         <div className='content'>
             <h3>Payment</h3>
 
-            <hr />
-
             <p>Manage and create payment methods.</p>
 
             <div className='card card-body table-wrapper'>
-                <table className='products-table'>
-                    <colgroup>
-                        <col style={{ width: '50px' }} />
-                        <col style={{ width: '110px' }} />
-                    </colgroup>
-                    <thead>
-                        <tr style={{ textAlign: 'left', borderBottom: '2px solid #ddd' }}>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Method</th>
-                            <th>Funds (R$)</th>
-                            <th>Credit Limit (R$)</th>
-                            <th>Limit Spent (R$)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pays.map((payment) => (
-                            <tr
-                                key={payment.id}
-                                className={`${payment.id == selectedPayment?.id ? 'products-table-selected' : ''}`}
-                                onClick={() => selectPayment(payment)}
-                            >
-                                <td>{payment.id}</td>
-                                <td>{payment.name}</td>
-                                <td>{payment.method.charAt(0).toUpperCase() + payment.method.slice(1).toLowerCase()}</td>
-                                <td>{payment.funds.toString()}</td>
-                                <td>{payment.creditLimit.toString()}</td>
-                                <td>{payment.limitSpent.toString()}</td>
+                {((payments ?? []).length == 0 && !isLoading && !error) ?
+                    <p>No Payments found.</p>
+                    :
+                    <table className='products-table'>
+                        <colgroup>
+                            <col style={{ width: '50px' }} />
+                            <col style={{ width: '110px' }} />
+                        </colgroup>
+                        <thead>
+                            <tr style={{ textAlign: 'left', borderBottom: '2px solid #ddd' }}>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Method</th>
+                                <th>Funds (R$)</th>
+                                <th>Credit Limit (R$)</th>
+                                <th>Limit Spent (R$)</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {payments?.map((payment) => (
+                                <tr
+                                    key={payment.id}
+                                    className={`${payment.id == selectedPayment?.id ? 'products-table-selected' : ''}`}
+                                    onClick={() => selectPayment(payment)}
+                                >
+                                    <td>{payment.id}</td>
+                                    <td>{payment.name}</td>
+                                    <td>{payment.method.value.charAt(0).toUpperCase() + payment.method.value.slice(1).toLowerCase()}</td>
+                                    <td>{payment.funds.toString()}</td>
+                                    <td>{payment.creditLimit.toString()}</td>
+                                    <td>{payment.limitSpent.toString()}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                }
             </div>
 
             <div className='actions-bar'>
                 <button onClick={() => changeView("a")} >New Payment</button>
-                <button onClick={() => changeView("b")} disabled={selectedPayment == null}>Edit Payment</button>
-                <button onClick={() => changeView("c")}>Delete Payment</button>
+                {/* <button onClick={() => changeView("b")} disabled={selectedPayment == null}>Edit Payment</button>
+                <button onClick={() => changeView("c")}>Delete Payment</button> */}
             </div>
 
             <div className={`actions-info card ${bEditPayment ? 'editing' : ''}`}>
@@ -182,9 +185,9 @@ function Payment() {
                             type='text'
                             name='method'
                             options={[
-                                { label: "Pix", value: "PIX"},
-                                { label: "Debit", value: "DEBIT"},
-                                { label: "Credit", value: "CREDIT"},
+                                { label: "Pix", value: "PIX" },
+                                { label: "Debit", value: "DEBIT" },
+                                { label: "Credit", value: "CREDIT" },
                             ]}
                             value={paymentCreation.method}
                             onChange={handlePaymentCreation}
@@ -196,10 +199,10 @@ function Payment() {
                             name='funds'
                             value={paymentCreation.funds}
                             onChange={handlePaymentCreation}
-                            disabled={(paymentCreation.method != "DEBIT")    
+                            disabled={(paymentCreation.method != "DEBIT")
                                 && paymentCreation.method != "PIX"
                             }
-                            />
+                        />
 
                         <InputForm
                             field='Credit Limit:'
@@ -214,7 +217,7 @@ function Payment() {
                     </div>
                 }
 
-                {bEditPayment &&
+                {/* {bEditPayment &&
                     <div>
                         <h4>Editing {selectedPayment?.name}</h4>
 
@@ -231,9 +234,9 @@ function Payment() {
                             type='text'
                             name='method'
                             options={[
-                                { label: "Pix", value: "PIX"},
-                                { label: "Debit", value: "DEBIT"},
-                                { label: "Credit", value: "CREDIT"},
+                                { label: "Pix", value: "PIX" },
+                                { label: "Debit", value: "DEBIT" },
+                                { label: "Credit", value: "CREDIT" },
                             ]}
                             value={editPayment.method}
                             onChange={handlePaymentEdit}
@@ -245,7 +248,7 @@ function Payment() {
                             name='funds'
                             value={editPayment.funds}
                             onChange={handlePaymentEdit}
-                            disabled={(paymentCreation.method != "DEBIT")    
+                            disabled={(paymentCreation.method != "DEBIT")
                                 && paymentCreation.method != "PIX"
                             }
                         />
@@ -261,9 +264,9 @@ function Payment() {
 
                         <button onClick={editingPayment}>Edit item</button>
                     </div>
-                }
+                } */}
 
-                {!bNewPayment && !bEditPayment &&
+                {!bNewPayment &&
                     <div>
                         <h4>Select a payment or create one</h4>
                     </div>

@@ -19,13 +19,14 @@ interface InputFormProps<T> {
     ) => void;
     ref?: Ref<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | null;
     disabled?: boolean;
-    readOnly?: boolean;
+    readOnly?: boolean; 
+    placeholder?: string; 
 }
 
 function InputForm<T>({ 
     field, name, value, type, classStyle,
     onChange, onFocus, onBlur,
-    ref, disabled, readOnly, options, 
+    ref, disabled, readOnly, options, placeholder
 }: InputFormProps<T>) {
     return (
         <div className={`${classStyle} input-form-div`}>
@@ -90,6 +91,7 @@ function InputForm<T>({
                     name={name}
                     value={value as string | number | readonly string[] | undefined}
                     readOnly={readOnly}
+                    placeholder={placeholder}
                     disabled={disabled}
                     onChange={onChange}
                     onFocus={onFocus}

@@ -1,1 +1,3 @@
-export type PaymentMethod = "PIX" | "DEBIT" | "CREDIT";
+export type PaymentMethod = {
+    value: "PIX" | "DEBIT" | "CREDIT";
+}

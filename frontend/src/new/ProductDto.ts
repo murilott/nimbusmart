@@ -5,5 +5,5 @@ export const productNew: ProductDto = {
     name: "",
     description: "",
     image: "",
-    tags: [],
+    tags: { value: [] },
 }

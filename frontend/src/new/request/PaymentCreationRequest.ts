@@ -5,5 +5,5 @@ export const paymentCreationNew: PaymentCreationRequest = {
     name: "",
     funds: new BigNumber(0),
     creditLimit: new BigNumber(0),
-    method: "PIX"
+    method: { value: "PIX" },
 }
