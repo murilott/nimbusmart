@@ -131,7 +131,7 @@ function Product() {
 
         try {
             const response = await mutateAsync(payload);
-            console.log("Response created: " + response.toString());
+            setProductCreation({ ...productCreationNew });
         } catch (err: unknown) {
             console.error("Unexpected error:", err);
         }
@@ -146,7 +146,7 @@ function Product() {
     function selectProduct(product: ProductDto) {
         setSelectedProduct(product);
         setEditProduct({ name: product.name, description: product.description, image: product.image, tags: product.tags.toString() });
-        console.log(product);
+        console.log(product);        
     }
 
     const { isLoading, error, data: products } = useQuery<ProductDto[]>({
@@ -158,57 +158,57 @@ function Product() {
         <div className='content'>
             <h3>Products</h3>
 
-            <hr />
-
             <p>Manage and create products.</p>
 
             <div className='card card-body table-wrapper'>
-                <table className='products-table'>
-                    <colgroup>
-                        <col style={{ width: '50px' }} />
-                        <col style={{ width: '110px' }} />
-                    </colgroup>
-                    <thead>
-                        <tr style={{ textAlign: 'left', borderBottom: '2px solid #ddd' }}>
-                            <th>ID</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Tags</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {prods.map((product) => (
-                            <tr
-                                key={product.id}
-                                className={`${product.id == selectedProduct?.id ? 'products-table-selected' : ''}`}
-                                onClick={() => selectProduct(product)}
-                            >
-                                <td>{product.id}</td>
-                                <td>
-                                    {product.image ? (
-                                        <img src={product.image} alt={product.name} width="40" />
-                                    ) : (
-                                        "No image"
-                                    )}
-                                </td>
-                                <td>{product.name}</td>
-                                <td>{product.description}</td>
-                                <td>
-                                    {product.tags.length > 0
-                                        ? product.tags.join(', ')
-                                        : '—'}
-                                </td>
+                {((products ?? []).length == 0 && !isLoading && !error) ?
+                    <p>No Products found.</p>
+                    :
+                    <table className='products-table'>
+                        <colgroup>
+                            <col style={{ width: '50px' }} />
+                            <col style={{ width: '110px' }} />
+                        </colgroup>
+                        <thead>
+                            <tr style={{ textAlign: 'left', borderBottom: '2px solid #ddd' }}>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Tags</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {products?.map((product) => (
+                                <tr
+                                    key={product.id}
+                                    className={`${product.id == selectedProduct?.id ? 'products-table-selected' : ''}`}
+                                    onClick={() => selectProduct(product)}
+                                >
+                                    <td>{product.id}</td>
+                                    <td>
+                                        {product.image ? (
+                                            <img src={product.image} alt={product.name} width="40" />
+                                        ) : (
+                                            "No image"
+                                        )}
+                                    </td>
+                                    <td>{product.name}</td>
+                                    <td>{product.description}</td>
+                                    <td>
+                                        {product.tags.value.join(",")}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                }
             </div>
 
             <div className='actions-bar'>
                 <button onClick={() => changeView("a")} >New Product</button>
-                <button onClick={() => changeView("b")} disabled={selectedProduct == null}>Edit Product</button>
-                <button onClick={() => changeView("c")}>Delete Product</button>
+                {/* <button onClick={() => changeView("b")} disabled={selectedProduct == null}>Edit Product</button>
+                <button onClick={() => changeView("c")}>Delete Product</button> */}
             </div>
 
             <div className={`actions-info card ${bEditProduct ? 'editing' : ''}`}>
@@ -252,7 +252,7 @@ function Product() {
                     </div>
                 }
 
-                {bEditProduct &&
+                {/* {bEditProduct &&
                     <div>
                         <h4>Editing {selectedProduct?.name}</h4>
 
@@ -290,13 +290,13 @@ function Product() {
 
                         <button onClick={editingProduct}>Edit item</button>
                     </div>
-                }
+                } */}
 
-                {!bNewProduct && !bEditProduct &&
+                {/* {!bNewProduct && !bEditProduct &&
                     <div>
                         <h4>Select an product or create one</h4>
                     </div>
-                }
+                } */}
 
             </div>
         </div>

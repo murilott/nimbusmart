@@ -2,17 +2,25 @@ import type { ProductCreationRequest } from "../dto/request/ProductCreationReque
 import type { ProductDto } from "../types/ProductDto";
 import { api } from "./api";
 
-export const listProducts = async (): Promise<ProductDto[]> => {
-  const response = await api.get<ProductDto[]>("/api/v1/product");
+type Page<T> = {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+};
 
-  return response.data;
+export const listProducts = async (): Promise<ProductDto[]> => {
+  const response = await api.get<Page<ProductDto>>("/product/products");
+
+  return response.data.content;
 };
 
 export const createProduct = async (
     productCreationRequest: ProductCreationRequest
 ): Promise<ProductDto> => {
     const response = await api.post<ProductDto>(
-        `/api/v1/product`,
+        `/product/products`,
         productCreationRequest
     );
 

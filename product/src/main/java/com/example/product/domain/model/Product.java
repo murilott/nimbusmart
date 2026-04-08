@@ -26,7 +26,7 @@ public class Product {
     @Column(nullable = false, updatable = false)
     private UUID id;
 
-    private String title;
+    private String name;
     private String description;
     private String image;
 
@@ -38,12 +38,13 @@ public class Product {
     private boolean archived;
     private OffsetDateTime archivedAt;
 
-    public static Product newProduct(String title, String description, List<String> tags) {
+    public static Product newProduct(String name, String description, List<String> tags, String image) {
         Product prod = new Product();
         prod.setId(UUID.randomUUID());
-        prod.setTitle(title);
+        prod.setName(name);
         prod.setDescription(description);
         prod.addTag(tags);
+        prod.setImage(image);
         prod.setCreatedAt(OffsetDateTime.now());
         prod.setArchived(false);
 
@@ -62,7 +63,7 @@ public class Product {
         if (!this.isArchived()) {
             this.setArchived(true);
             this.setArchivedAt(OffsetDateTime.now());
-            log.info("Product {} archived at {}", this.getTitle(), this.getArchivedAt());
+            log.info("Product {} archived at {}", this.getName(), this.getArchivedAt());
         } else {
             throw new RuntimeException("This product is already archived");
         }
@@ -72,7 +73,7 @@ public class Product {
         if (this.isArchived()) {
             this.setArchived(false);
             this.setArchivedAt(null);
-            log.info("Product {} restored at {}", this.getTitle(), this.getArchivedAt());
+            log.info("Product {} restored at {}", this.getName(), this.getArchivedAt());
         } else {
             throw new RuntimeException("This product is already active");
         }

@@ -38,8 +38,9 @@ public class ProductController {
     @PostMapping()
     public ResponseEntity<ProductResponseDto> create(@Valid @RequestBody ProductCreationDto request) {
         CreateProductCommand command = new CreateProductCommand(
-            request.title(), 
-            request.description(), 
+            request.name(), 
+            request.description(),
+            request.image(),
             request.tags()
         );
         ProductResponseDto created = createProductHandler.handle(command);

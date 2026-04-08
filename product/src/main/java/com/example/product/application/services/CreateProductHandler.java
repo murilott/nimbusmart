@@ -1,5 +1,8 @@
 package com.example.product.application.services;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.product.application.commands.CreateProductCommand;
@@ -19,7 +22,11 @@ public class CreateProductHandler {
 
 
     public ProductResponseDto handle(CreateProductCommand dto) {
-        Product product = Product.newProduct(dto.title(), dto.description(), dto.tags());
+        List<String> tagList = Arrays.stream(dto.tags().split(","))
+            .map(item -> item.trim().toLowerCase())
+            .toList();
+                
+        Product product = Product.newProduct(dto.name(), dto.description(), tagList, dto.image());
         Product savedProduct = repository.save(product);
         
         return mapper.toDto(savedProduct);

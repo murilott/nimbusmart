@@ -3,9 +3,10 @@ package com.example.product.application.commands;
 import java.util.List;
 
 public record CreateProductCommand(
-    String title,
+    String name,
     String description,
-    List<String> tags
+    String image,
+    String tags
 ) {
     
 }

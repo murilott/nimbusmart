@@ -8,7 +8,7 @@ import com.example.product.domain.vo.Tag;
 
 public record ProductResponseDto(
     UUID id,
-    String title,
+    String name,
     String description,
     String image,
     Tag tags,

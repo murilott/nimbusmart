@@ -214,7 +214,8 @@ function Inventory() {
 
         try {
             const response = await createInventoryMutate(payload);
-            console.log("Response created: " + response.toString());
+            setInventoryCreation({ ...inventoryCreationNew });
+            selectInventory(response)
         } catch (err: unknown) {
             console.error("Unexpected error:", err);
         }
@@ -252,6 +253,7 @@ function Inventory() {
                     <ul className='inventory-list'>
                         {inventories?.map((inv) => (
                             <li 
+                                key={inv.id}
                                 onClick={() => selectInventory(inv)}
                                 className={`${selectedInventory?.id == inv.id 
                                     ? 'inventory-items-category-selected'
