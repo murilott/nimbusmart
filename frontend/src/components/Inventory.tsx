@@ -15,6 +15,7 @@ import type { InventoryDto } from '../types/InventoryDto';
 import InventoryItemCard from './InventoryItemCard';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createInventory, createInventoryItem, listInventories, listInventoryItems } from '../service/inventory.service';
+import { listProducts } from '../service/product.service';
 
 const prods: ProductDto[] = [
     {
@@ -107,7 +108,7 @@ function Inventory() {
     // const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(inventoryItemNew);
     const [inventoryCreation, setInventoryCreation] = useState<InventoryCreationRequest>(inventoryCreationNew);
     const [inventoryItemCreation, setInventoryItemCreation] = useState<InventoryItemCreationRequest>(inventoryItemCreationNew);
-    
+
     const [selectedInventory, setSelectedInventory] = useState<InventoryDto | null>(null);
     const [selectedInventoryItem, setSelectedInventoryItem] = useState<InventoryItemDto | null>(null);
     const [editInventoryItem, setEditInventoryItem] = useState<InventoryItemCreationRequest>(inventoryItemCreationNew);
@@ -135,7 +136,7 @@ function Inventory() {
         React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
     ) => {
         const { name, value } = e.target;
-        
+
         setEditInventoryItem((prev) => ({
             ...prev,
             [name]: name === "price"
@@ -182,13 +183,18 @@ function Inventory() {
 
     const { mutateAsync: createInventoryItemMutate, isPending: isInvItemCreationPending } = useMutation({
         mutationFn: createInventoryItem,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['inventoryItems'] });
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['inventories'] });
         },
     });
 
     async function creatingItem() {
-        const payload = { ...inventoryItemCreation };
+        if (!selectedInventory || selectedInventory.id == null) {
+            console.log("Inventory not selected");
+            return;
+        }
+
+        const payload: InventoryItemCreationRequest = { ...inventoryItemCreation, inventoryId: selectedInventory.id };
 
         try {
             const response = await createInventoryItemMutate(payload);
@@ -199,8 +205,8 @@ function Inventory() {
     }
 
     function editItem() {
-        const payload = { 
-            ...selectedInventoryItem, 
+        const payload = {
+            ...selectedInventoryItem,
             price: editInventoryItem.price,
             productId: editInventoryItem.productId,
             quantity: editInventoryItem.quantity
@@ -225,17 +231,22 @@ function Inventory() {
         setSelectedInventory(inv);
         setSelectedInventoryItem(null);
         setBEditItem(false);
-        setEditInventoryItem({...inventoryItemCreationNew});
+        setEditInventoryItem({ ...inventoryItemCreationNew });
     }
 
     function selectInventoryItem(item: InventoryItemDto) {
-        setSelectedInventoryItem(item);        
-        setEditInventoryItem({price: item.price, productId: item.productId ?? 0, quantity: item.quantity});
+        setSelectedInventoryItem(item);
+        // setEditInventoryItem({price: item.price, productId: item.productId ?? 0, quantity: item.quantity});
     }
 
     const { isLoading: isInventoryListLoading, error: listInventoryError, data: inventories } = useQuery<InventoryDto[]>({
         queryKey: ['inventories'],
         queryFn: listInventories,
+    });
+
+    const { data: products } = useQuery<ProductDto[]>({
+        queryKey: ['products'],
+        queryFn: listProducts,
     });
 
     return (
@@ -252,35 +263,34 @@ function Inventory() {
 
                     <ul className='inventory-list'>
                         {inventories?.map((inv) => (
-                            <li 
+                            <li
                                 key={inv.id}
                                 onClick={() => selectInventory(inv)}
-                                className={`${selectedInventory?.id == inv.id 
+                                className={`${selectedInventory?.id == inv.id
                                     ? 'inventory-items-category-selected'
                                     : ''
-                                }`}    
+                                    }`}
                             >{inv.name}</li>
                         ))}
                     </ul>
-
-                    {/* <li className='inventory-items-category-selected'>Hardware</li> */}
                 </div>
 
                 <div className='inventory-items-list'>
                     {selectedInventory?.items.map((item) => (
-                        <InventoryItemCard 
-                            item={item} 
+                        <InventoryItemCard
+                            item={item}
                             onClick={(selItem) => selectInventoryItem(selItem)}
                             // selectedItem={selectedInventoryItem}
                             onSelected={item.id == selectedInventoryItem?.id}
+                            products={products ?? []}
                         />
                     ))}
 
-                    {selectedInventory?.items.length == 0 && 
+                    {selectedInventory?.items.length == 0 &&
                         <p>No items found.</p>
                     }
 
-                    {!selectedInventory && 
+                    {!selectedInventory &&
                         <p>Select an inventory to view its items.</p>
                     }
                 </div>
@@ -288,7 +298,7 @@ function Inventory() {
 
             <div className='actions-bar'>
                 <button onClick={() => changeView("a")} disabled={selectedInventory == null}>New Item</button>
-                <button onClick={() => changeView("b")} disabled={selectedInventoryItem == null}>Edit Item</button>
+                {/* <button onClick={() => changeView("b")} disabled={selectedInventoryItem == null}>Edit Item</button> */}
 
                 <button onClick={() => changeView("c")}>New Inventory</button>
             </div>
@@ -304,7 +314,7 @@ function Inventory() {
                             type='text'
                             name='productId'
                             value={inventoryItemCreation.productId}
-                            options={(prods ?? []).map((p) => ({ value: p.id, label: p.name }))}
+                            options={(products ?? []).map((p) => ({ value: p.id, label: p.name }))}
                             onChange={handleInventoryItem}
                         />
 
@@ -328,7 +338,7 @@ function Inventory() {
                     </div>
                 }
 
-                {bEditItem &&
+                {/* {bEditItem &&
                     <div>
                         <h4>Editing {selectedInventoryItem?.id} in {selectedInventory?.name}</h4>
 
@@ -359,7 +369,7 @@ function Inventory() {
 
                         <button onClick={editItem}>Edit item</button>
                     </div>
-                }
+                } */}
 
                 {bNewInventory &&
                     <div>
@@ -385,7 +395,7 @@ function Inventory() {
                     </div>
                 }
 
-                {!bNewInventory && !bEditItem && !bNewItem &&
+                {!bNewInventory && !bNewItem &&
                     <div>
                         <h4>Select an item or create one</h4>
                     </div>
