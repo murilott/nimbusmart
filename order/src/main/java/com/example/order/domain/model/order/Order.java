@@ -56,6 +56,7 @@ public class Order {
         order.setId(UUID.randomUUID());
         order.setCreatedAt(OffsetDateTime.now());
         order.setStatus(Status.of(StatusType.PENDING));
+        order.setItems(List.of());
 
         return order;
     }

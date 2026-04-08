@@ -38,7 +38,7 @@ public class OrderItemController {
     @PostMapping()
     public ResponseEntity<OrderItemResponseDto> create(@Valid @RequestBody OrderItemCreationDto request) {                
         CreateOrderItemCommand command = new CreateOrderItemCommand(
-            request.orderId(), 
+            // request.orderId(), 
             request.inventoryItemId(), 
             request.quantity()
         );

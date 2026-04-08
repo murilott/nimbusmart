@@ -13,6 +13,7 @@ import type { OrderItemCreationRequest } from '../dto/request/OrderItemCreationR
 import { OrderItemCreationNew } from '../new/request/OrderItemCreationRequest';
 import { listProducts } from '../service/product.service';
 import { listInventoryItems } from '../service/inventory.service';
+import { addToOrder } from '../service/order.service';
 
 const prods: ProductDto[] = [
     {
@@ -73,9 +74,9 @@ function ProductPage() {
     });
 
     const { data: inventoryItems } = useQuery<InventoryItemDto[]>({
-            queryKey: ['inventoryItems'],
-            queryFn: listInventoryItems,
-        });
+        queryKey: ['inventoryItems'],
+        queryFn: listInventoryItems,
+    });
 
     const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(() => {
         const item: InventoryItemDto = inventoryItems?.find(p => id == p.productId?.toString()) ?? inventoryItemNew;
@@ -120,23 +121,30 @@ function ProductPage() {
     // if (isLoading) return <div>Carregando...</div>;
     // if (isError) return <div>Erro: {error.message}</div>;
 
-    function addToCart() {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: addToOrder,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
+        },
+    });
+
+    async function addToCart() {
         const payload: OrderItemCreationRequest = {
             ...orderItem,
-            inventoryItemId: inventoryItem.id,
-            orderId: 1
+            inventoryItemId: inventoryItem.id
         }
 
-        console.log(payload);
-
+        
+        try {
+            const response = await mutateAsync(payload);
+            console.log(response);
+            // setProductCreation({ ...productCreationNew });
+        } catch (err: unknown) {
+            console.error("Unexpected error:", err);
+        }
+        
     }
 
-    // const { mutateAsync, isPending } = useMutation({
-    //     mutationFn: createOrderItem,
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({ queryKey: ['payments'] });
-    //     },
-    // });
 
     return (
         <div className='content'>

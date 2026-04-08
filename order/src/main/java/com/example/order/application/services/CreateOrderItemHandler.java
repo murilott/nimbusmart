@@ -10,6 +10,7 @@ import com.example.order.domain.model.order.OrderItem;
 import com.example.order.domain.vo.ItemSnapshot;
 import com.example.order.infrastructure.messaging.out.InventoryGrpcGateway;
 import com.example.order.interfaces.rest.dto.OrderItemResponseDto;
+import com.example.order.interfaces.rest.dto.OrderResponseDto;
 import com.example.order.interfaces.rest.mapper.OrderItemMapper;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -23,13 +24,31 @@ public class CreateOrderItemHandler {
     private final OrderItemRepository repository;
     private final OrderRepository orderRepository;
     private final OrderItemMapper mapper;
+    private final CreateOrderHandler createOrderHandler;
 
     private final InventoryGrpcGateway inventoryGrpcGateway;
 
     public OrderItemResponseDto handle(CreateOrderItemCommand cmd) {
-        Order order = orderRepository
-            .findById(cmd.orderId())
-            .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        // Order order = orderRepository
+        //     .findById(cmd.orderId())
+        //     .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        Order getOrder = orderRepository.findAll().stream().findFirst().orElse(null);
+
+        if (getOrder != null && (getOrder.getDeliveredAt() != null || getOrder.getCancelledAt() != null)) {
+            log.info("Order has finished, creating another one");
+            getOrder = null;
+        }
+
+        if (getOrder == null) {
+            log.info("Order not found, creating one");
+            
+            OrderResponseDto dto = createOrderHandler.handle();
+
+            getOrder = orderRepository
+                .findById(dto.id())
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+        }
 
         ItemSnapshot itemSnapshot = inventoryGrpcGateway.checkAvailability(cmd.inventoryItemId(), cmd.quantity());
 
@@ -37,11 +56,11 @@ public class CreateOrderItemHandler {
             throw new EntityNotFoundException("InventoryItem does not exist");
         }
 
-        OrderItem item = OrderItem.newOrderItem(order, itemSnapshot, cmd.quantity());
+        OrderItem item = OrderItem.newOrderItem(getOrder, itemSnapshot, cmd.quantity());
 
-        order.addToOrder(item);
+        getOrder.addToOrder(item);
 
-        orderRepository.save(order);
+        orderRepository.save(getOrder);
 
         boolean reserve = inventoryGrpcGateway.reserveItem(cmd.inventoryItemId(), cmd.quantity());
 
