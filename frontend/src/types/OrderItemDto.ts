@@ -1,9 +1,9 @@
 import type BigNumber from "bignumber.js"
+import type { ItemSnapshot } from "./ItemSnapshot"
 
 export type OrderItemDto = {
     id: number | null,
-    itemId: number | null,
-    itemCost: BigNumber,
+    inventoryItem: ItemSnapshot,
     quantity: number,
     cost: BigNumber
 }

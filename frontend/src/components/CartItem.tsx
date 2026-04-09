@@ -10,6 +10,8 @@ import { toBrl } from '../helper/toPrice';
 
 interface CartItemProps {
     orderItem: OrderItemDto,
+    products: ProductDto[],
+    inventoryItems: InventoryItemDto[],
 }
 
 const prods: ProductDto[] = [
@@ -57,10 +59,10 @@ const items: InventoryItemDto[] = [
     },
 ]
 
-function CartItem({ orderItem }: CartItemProps) {
+function CartItem({ orderItem, products, inventoryItems }: CartItemProps) {
     const [inventoryItem, setInventoryItem] = useState<InventoryItemDto>(() => {
-        const item: InventoryItemDto = items.find(p => p.id == orderItem?.itemId) ?? inventoryItemNew;
-
+        const item: InventoryItemDto = inventoryItems.find(p => p.id == orderItem?.inventoryItem.itemId) ?? inventoryItemNew;
+        
         return {
             id: item.id,
             productId: item.productId,
@@ -70,7 +72,7 @@ function CartItem({ orderItem }: CartItemProps) {
     });
 
     const [product, setProduct] = useState<ProductDto>(() => {
-        const prod: ProductDto = prods.find(p => inventoryItem.productId == p.id) ?? productNew;
+        const prod: ProductDto = products.find(p => inventoryItem.productId == p.id) ?? productNew;
 
         return {
             id: inventoryItem.productId,
@@ -94,12 +96,12 @@ function CartItem({ orderItem }: CartItemProps) {
 
             <div className='cart-item-cost'>
                 <div>
-                    <p>Unit Cost: {toBrl(orderItem.itemCost)}</p>
+                    <p>Unit Cost: {toBrl(new BigNumber(orderItem.inventoryItem.cost ?? 0))}</p>
                     <p>Quantity: {orderItem.quantity}</p>
                 </div>
 
                 <div>
-                    <p>Total: {toBrl(orderItem.cost)}</p>
+                    <p>Total: {toBrl(new BigNumber(orderItem.cost ?? 0))}</p>
                 </div>
             </div>
         </div>

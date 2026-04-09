@@ -9,6 +9,12 @@ export const listOrders = async (): Promise<OrderDto[]> => {
   return response.data;
 };
 
+export const activeOrder = async (): Promise<OrderDto> => {
+  const response = await api.get<OrderDto>("/order/api/v1/order/get-active");
+
+  return response.data;
+};
+
 export const addToOrder = async (
     orderItemCreationRequest: OrderItemCreationRequest
 ): Promise<OrderItemDto> => {

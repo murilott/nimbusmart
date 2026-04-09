@@ -6,6 +6,12 @@ import type { OrderDto } from '../types/OrderDto'
 import "../style/cart.css"
 import CheckoutPopup from './CheckoutPopup'
 import { toBrl } from '../helper/toPrice'
+import { activeOrder, listOrders } from '../service/order.service'
+import { useQuery } from '@tanstack/react-query'
+import { listInventoryItems } from '../service/inventory.service'
+import { listProducts } from '../service/product.service'
+import type { InventoryItemDto } from '../types/InventoryItemDto'
+import type { ProductDto } from '../types/ProductDto'
 
 const carts: OrderItemDto[] = [
     {
@@ -60,8 +66,23 @@ const orderObj: OrderDto = {
 }
 
 function Cart() {
-    const [ isCheckoutOpen, setIsCheckoutOpen ] = useState<boolean>(false);
-    const [order, setOrder] = useState<OrderDto>(orderObj);
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
+    // const [order, setOrder] = useState<OrderDto>(orderObj);
+
+    const { isLoading, error, data: order } = useQuery<OrderDto>({
+        queryKey: ['order'],
+        queryFn: activeOrder,
+    });
+
+    const { data: inventoryItems } = useQuery<InventoryItemDto[]>({
+        queryKey: ['inventoryItems'],
+        queryFn: listInventoryItems,
+    });
+
+    const { data: products } = useQuery<ProductDto[]>({
+        queryKey: ['products'],
+        queryFn: listProducts,
+    });
 
     function toCheckout(open: boolean) {
         setIsCheckoutOpen(open);
@@ -69,21 +90,12 @@ function Cart() {
 
     return (
         <div className='content'>
-            <h3>Cart: {carts.length} item(s)</h3>
-
-            <hr />
+            <h3>Cart: {order?.items?.length ?? 0} item(s)</h3>
 
             <div className='card'>
                 <div className='cart-item-list'>
-                    {carts?.map((orderItem) => (
-                        // <li
-                        //     onClick={() => selectInventory(inv)}
-                        //     className={`${selectedInventory?.id == inv.id
-                        //         ? 'inventory-items-category-selected'
-                        //         : ''
-                        //         }`}
-                        // >{inv.name}</li>
-                        <CartItem orderItem={orderItem} />
+                    {order?.items?.map((orderItem) => (
+                        <CartItem orderItem={orderItem} products={products ?? []} inventoryItems={inventoryItems ?? []}/>
                     ))}
                 </div>
 
@@ -91,15 +103,15 @@ function Cart() {
                     <hr />
 
                     <div className='cart-checkout-actions'>
-                        <button onClick={() => toCheckout(true)}>Checkout</button>
+                        <button onClick={() => toCheckout(true)} disabled={!order}>Checkout</button>
 
-                        <p>Total: {toBrl(order.totalCost)}</p>
+                        <p>Total: {toBrl(new BigNumber(order?.totalCost ?? 0))}</p>
                     </div>
                 </div>
             </div>
 
-            {isCheckoutOpen && 
-                <CheckoutPopup order={order} setOrder={setOrder} toggle={(open) => toCheckout(open)} />
+            {isCheckoutOpen && order &&
+                <CheckoutPopup dataOrder={order} toggle={(open) => toCheckout(open)} />
             }
         </div>
     )

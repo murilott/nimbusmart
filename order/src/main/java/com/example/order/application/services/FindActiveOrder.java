@@ -1,0 +1,27 @@
+package com.example.order.application.services;
+
+import org.springframework.stereotype.Service;
+
+import com.example.order.application.ports.out.OrderItemRepository;
+import com.example.order.application.ports.out.OrderRepository;
+import com.example.order.domain.model.order.Order;
+import com.example.order.interfaces.rest.dto.OrderResponseDto;
+import com.example.order.interfaces.rest.mapper.OrderItemMapper;
+import com.example.order.interfaces.rest.mapper.OrderMapper;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+@Service
+public class FindActiveOrder {
+    private final OrderRepository repository;
+    private final OrderMapper mapper;
+
+    public OrderResponseDto handle() {
+        Order order = repository.findAll().stream()
+            .filter(ord -> (ord.getDeliveredAt() == null && ord.getCancelledAt() == null))
+            .findFirst()
+            .orElse(null);
+        return mapper.toDto(order);
+    }
+}

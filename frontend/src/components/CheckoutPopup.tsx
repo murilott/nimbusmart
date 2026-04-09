@@ -10,8 +10,8 @@ import type { OrderDto } from '../types/OrderDto';
 
 interface CheckoutPopupProps {
     toggle: (open: boolean) => void,
-    order: OrderDto,
-    setOrder: (order: OrderDto) => void;
+    dataOrder: OrderDto,
+    // setOrder: (order: OrderDto) => void;
 }
 
 const pays: PaymentDto[] = [
@@ -43,9 +43,9 @@ const pays: PaymentDto[] = [
 
 
 
-function CheckoutPopup({ toggle, order, setOrder }: CheckoutPopupProps) {
+function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
     const [transaction, setTransaction] = useState<TransactionCreationRequest>(transactionCreationNew);
-    
+    const [order, setOrder] = useState<OrderDto>(dataOrder);
     const [payment, setPayment] = useState<PaymentDto>();
 
     const handleTransactionCreation = (e:
@@ -85,8 +85,6 @@ function CheckoutPopup({ toggle, order, setOrder }: CheckoutPopupProps) {
             <div className="popup-card">
                 <div>
                     <h3>Checkout</h3>
-
-                    <hr />
                 </div>
 
                 <div className='popup-card-info'>
@@ -102,7 +100,7 @@ function CheckoutPopup({ toggle, order, setOrder }: CheckoutPopupProps) {
 
                         {transaction.paymentId &&
                             <div>
-                                {(payment?.method == "DEBIT" || payment?.method == "PIX") &&
+                                {(payment?.method.value == "DEBIT" || payment?.method.value == "PIX") &&
                                     <>
                                         <p>Funds: {toBrl(payment.funds)}</p>
 
@@ -112,7 +110,7 @@ function CheckoutPopup({ toggle, order, setOrder }: CheckoutPopupProps) {
                                     </>
                                 }
 
-                                {payment?.method == "CREDIT" &&
+                                {payment?.method.value == "CREDIT" &&
                                     <>
                                         <p>Limit: {toBrl(payment.creditLimit)}</p>
                                         <p>Spent: {toBrl(payment.limitSpent)}</p>
@@ -130,14 +128,14 @@ function CheckoutPopup({ toggle, order, setOrder }: CheckoutPopupProps) {
                         }
                     </div>
 
-                    <p>Total: {toBrl(order.totalCost)}</p>
+                    <p>Total: {toBrl(new BigNumber(order.totalCost))}</p>
                 </div>
 
                 <div className='popup-card-actions'>
                     <button onClick={togglePopup}>Close</button>
                     <button onClick={buy} disabled={
-                        ((payment?.method == "DEBIT" ||
-                        payment?.method == "PIX") && order.totalCost.isGreaterThan(payment?.funds ?? 0))
+                        ((payment?.method.value == "DEBIT" ||
+                        payment?.method.value == "PIX") && order.totalCost.isGreaterThan(payment?.funds ?? 0))
                         || !payment
                     }>Buy</button>
                 </div>

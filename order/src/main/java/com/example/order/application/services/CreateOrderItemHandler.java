@@ -33,7 +33,10 @@ public class CreateOrderItemHandler {
         //     .findById(cmd.orderId())
         //     .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-        Order getOrder = orderRepository.findAll().stream().findFirst().orElse(null);
+        Order getOrder = orderRepository.findAll().stream()
+            .filter(order -> (order.getDeliveredAt() == null && order.getCancelledAt() == null))
+            .findFirst()
+            .orElse(null);
 
         if (getOrder != null && (getOrder.getDeliveredAt() != null || getOrder.getCancelledAt() != null)) {
             log.info("Order has finished, creating another one");
