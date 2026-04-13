@@ -7,6 +7,8 @@ import BigNumber from 'bignumber.js';
 import type { PaymentDto } from '../types/PaymentDto';
 import { toBrl } from '../helper/toPrice';
 import type { OrderDto } from '../types/OrderDto';
+import { createTransaction, listPayments } from '../service/payment.service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface CheckoutPopupProps {
     toggle: (open: boolean) => void,
@@ -48,6 +50,8 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
     const [order, setOrder] = useState<OrderDto>(dataOrder);
     const [payment, setPayment] = useState<PaymentDto>();
 
+    const queryClient = useQueryClient();
+
     const handleTransactionCreation = (e:
         React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
     ) => {
@@ -64,19 +68,38 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
     }
 
     useEffect(() => {
-        const pay = pays.find((p) => transaction.paymentId == p.id)
+        const pay = payments?.find((p) => transaction.paymentId == p.id)
         setPayment(pay);
     }, [transaction.paymentId])
 
-    function buy() {
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: createTransaction,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['order'] });
+        },
+    });
+
+    async function buy() {
         const payload: TransactionCreationRequest = {
             ...transaction,
             orderId: order.id
         }
 
-        console.log(payload);
-        
+        // console.log(payload);
+        try {
+            const response = await mutateAsync(payload);
+            console.log("Response created: " + response.toString());
+            // setPaymentCreation({ ...paymentCreationNew });
+        } catch (err: unknown) {
+            console.error("Unexpected error:", err);
+        }
+
     }
+
+    const { data: payments } = useQuery<PaymentDto[]>({
+        queryKey: ['payments'],
+        queryFn: listPayments,
+    });
 
     return (
         <div>
@@ -94,7 +117,7 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
                             type='text'
                             name='paymentId'
                             value={transaction.paymentId}
-                            options={(pays ?? []).map((p) => ({ value: p.id, label: p.name }))}
+                            options={(payments ?? []).map((p) => ({ value: p.id, label: p.name }))}
                             onChange={handleTransactionCreation}
                         />
 
@@ -102,18 +125,18 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
                             <div>
                                 {(payment?.method.value == "DEBIT" || payment?.method.value == "PIX") &&
                                     <>
-                                        <p>Funds: {toBrl(payment.funds)}</p>
+                                        <p>Funds: {toBrl(new BigNumber(payment.funds))}</p>
 
-                                        {(order.totalCost.isGreaterThan(payment?.funds)) &&
-                                            <p style={{ color: "red"}}>Insufficent funds</p>
+                                        {(new BigNumber(order.totalCost).isGreaterThan(new BigNumber(payment?.funds))) &&
+                                            <p style={{ color: "red" }}>Insufficent funds</p>
                                         }
                                     </>
                                 }
 
                                 {payment?.method.value == "CREDIT" &&
                                     <>
-                                        <p>Limit: {toBrl(payment.creditLimit)}</p>
-                                        <p>Spent: {toBrl(payment.limitSpent)}</p>
+                                        <p>Limit: {toBrl(new BigNumber(payment.creditLimit))}</p>
+                                        <p>Spent: {toBrl(new BigNumber(payment.limitSpent))}</p>
                                     </>
                                 }
                             </div>
@@ -123,7 +146,7 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
                             <p>Select a payment</p>
                         }
 
-                        {pays.length == 0 &&
+                        {payments?.length == 0 &&
                             <p>No payment found, create one first</p>
                         }
                     </div>
@@ -135,7 +158,7 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
                     <button onClick={togglePopup}>Close</button>
                     <button onClick={buy} disabled={
                         ((payment?.method.value == "DEBIT" ||
-                        payment?.method.value == "PIX") && order.totalCost.isGreaterThan(payment?.funds ?? 0))
+                            payment?.method.value == "PIX") && new BigNumber(order.totalCost).isGreaterThan(new BigNumber(payment?.funds) ?? 0))
                         || !payment
                     }>Buy</button>
                 </div>

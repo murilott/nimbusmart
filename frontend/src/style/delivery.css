@@ -54,7 +54,8 @@
 }
 
 .shipment-info {
-
+    height: 25vh;
+    font-size: 14px;
 }
 
 .shipment-info > h4 {

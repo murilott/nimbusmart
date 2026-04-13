@@ -199,6 +199,8 @@ function Inventory() {
         try {
             const response = await createInventoryItemMutate(payload);
             console.log("Response created: " + response.toString());
+            setInventoryItemCreation({ ...inventoryItemCreationNew });
+            selectInventory(selectedInventory);
         } catch (err: unknown) {
             console.error("Unexpected error:", err);
         }

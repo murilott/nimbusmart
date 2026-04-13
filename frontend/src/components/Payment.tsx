@@ -120,6 +120,8 @@ function Payment() {
         <div className='content'>
             <h3>Payment</h3>
 
+            <hr />
+
             <p>Manage and create payment methods.</p>
 
             <div className='card card-body table-wrapper'>

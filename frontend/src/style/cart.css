@@ -9,3 +9,18 @@
     overflow: auto;
     scrollbar-width: thin;
 }
+
+.cart-delivery-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 10px;
+    background: linear-gradient(135deg, #e9d5ff, #f8fafc, #cbd5e1);
+}
+
+.cart-delivery-content {
+    margin-left: auto;
+    padding-right: 20px;
+}

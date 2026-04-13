@@ -6,7 +6,7 @@ import type { ShipmentDto } from "../types/ShipmentDto";
 import { api } from "./api";
 
 export const listDeliveryTracking = async (): Promise<DeliveryTrackingDto[]> => {
-  const response = await api.get<DeliveryTrackingDto[]>("/api/v1/delivery-tracking");
+  const response = await api.get<DeliveryTrackingDto[]>("/delivery/api/v1/delivery-tracking");
 
   return response.data;
 };
@@ -15,7 +15,7 @@ export const nextDeliver = async (
     nextDeliverRequest: NextDeliverRequest
 ): Promise<ShipmentDto> => {
     const response = await api.post<ShipmentDto>(
-        `/api/v1/delivery-tracking/next-deliver`,
+        `/delivery/api/v1/delivery-tracking/next-deliver`,
         nextDeliverRequest
     );
 
@@ -26,7 +26,7 @@ export const nextDelivered = async (
     nextDeliveredRequest: NextDeliveredRequest
 ): Promise<ShipmentDto> => {
     const response = await api.post<ShipmentDto>(
-        `/api/v1/delivery-tracking/next-delivered`,
+        `/delivery/api/v1/delivery-tracking/next-delivered`,
         nextDeliveredRequest
     );
 
@@ -37,7 +37,7 @@ export const cancelShipment = async (
     cancelShipmentRequest: CancelShipmentRequest
 ): Promise<ShipmentDto> => {
     const response = await api.post<ShipmentDto>(
-        `/api/v1/delivery-tracking/cancel-shipment`,
+        `/delivery/api/v1/delivery-tracking/cancel-shipment`,
         cancelShipmentRequest
     );
 

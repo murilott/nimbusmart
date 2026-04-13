@@ -1,1 +1,3 @@
-export type ShipmentStatus = "PENDING" | "IN_TRANSIT" | "DELIVERED" | "FAILED";
+export type ShipmentStatus = {
+    value: "PENDING" | "IN_TRANSIT" | "DELIVERED" | "FAILED";
+} 

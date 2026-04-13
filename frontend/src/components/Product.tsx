@@ -158,6 +158,8 @@ function Product() {
         <div className='content'>
             <h3>Products</h3>
 
+            <hr />
+
             <p>Manage and create products.</p>
 
             <div className='card card-body table-wrapper'>

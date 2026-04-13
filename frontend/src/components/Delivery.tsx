@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "../style/delivery.css"
 import type { ShipmentDto } from '../types/ShipmentDto'
 import { shipmentNew } from '../new/ShipmentDto'
@@ -6,6 +6,13 @@ import { formatDate } from '../helper/formatDate';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { DeliveryTrackingDto } from '../types/DeliveryTrackingDto';
 import { listDeliveryTracking, nextDeliver, nextDelivered } from '../service/delivery.service';
+import type { OrderDto } from '../types/OrderDto';
+import { activeOrder, listOrders } from '../service/order.service';
+import { listInventoryItems } from '../service/inventory.service';
+import type { InventoryItemDto } from '../types/InventoryItemDto';
+import { obtainInventoryItem, obtainProductFromInventoryItem } from '../helper/obtainObjects';
+import { listProducts } from '../service/product.service';
+import type { ProductDto } from '../types/ProductDto';
 
 const ships: ShipmentDto[] = [
     {
@@ -56,6 +63,7 @@ const ships: ShipmentDto[] = [
 
 function Delivery() {
     const [selectedShipment, setSelectedShipment] = useState<ShipmentDto | null>();
+    const [selectedShipmentOrder, setSelectedShipmentOrder] = useState<OrderDto | null>();
 
     const queryClient = useQueryClient();
 
@@ -73,13 +81,37 @@ function Delivery() {
         },
     });
 
-    const { isLoading, error, data: deliveryTracking } = useQuery<DeliveryTrackingDto[]>({
+    const { data: deliveryTracking } = useQuery<DeliveryTrackingDto[]>({
         queryKey: ['deliveryTracking'],
         queryFn: listDeliveryTracking,
     });
 
+    const { data: inventoryItems } = useQuery<InventoryItemDto[]>({
+        queryKey: ['inventoryItems'],
+        queryFn: listInventoryItems,
+    });
+
     function selectShipment(shipment: ShipmentDto) {
         setSelectedShipment(shipment);
+    }
+
+    const { data: orders } = useQuery<OrderDto[]>({
+        queryKey: ['orders'],
+        queryFn: listOrders,
+    });
+
+    const { data: products } = useQuery<ProductDto[]>({
+        queryKey: ['products'],
+        queryFn: listProducts,
+    });
+
+    useEffect(() => {
+        const ord = orders?.find((o) => selectedShipment?.orderId == o.id)
+        setSelectedShipmentOrder(ord);
+    }, [selectedShipment?.orderId])
+
+    function debug() {
+        console.log(deliveryTracking);
     }
 
     return (
@@ -87,6 +119,8 @@ function Delivery() {
             <h3>Delivery</h3>
 
             <hr />
+            
+            <button onClick={debug}>Debug</button>
 
             <p>Manage delivery shipments.</p>
 
@@ -95,12 +129,13 @@ function Delivery() {
                     <h4>Pending deliveries</h4>
 
                     <div className='delivery-column-shipment-list'>
-                        {ships.filter(s => s.status == "PENDING")
+                        {deliveryTracking?.length && deliveryTracking[0].itemsToDeliver //.filter(s => s.status.value == "PENDING")
                             .map((ship) => (
                                 <div
+                                    key={ship.id}
                                     onClick={() => selectShipment(ship)}
                                     className={`${ship.id == selectedShipment?.id ? 'shipment-selected' : ''}`}
-                                >Shipment {ship.id}</div>
+                                >Shipment {deliveryTracking[0].itemsToDeliver.indexOf(ship)}</div>
                             ))
                         }
                     </div>
@@ -112,9 +147,10 @@ function Delivery() {
                     <h4>In transit deliveries</h4>
 
                     <div className='delivery-column-shipment-list'>
-                        {ships.filter(s => s.status == "IN_TRANSIT")
+                        {deliveryTracking?.length && deliveryTracking[0].itemsDelivering.filter(s => s.status.value == "IN_TRANSIT")
                             .map((ship) => (
                                 <div
+                                    key={ship.id}
                                     onClick={() => selectShipment(ship)}
                                     className={`${ship.id == selectedShipment?.id ? 'shipment-selected' : ''}`}
                                 >Shipment {ship.id}</div>
@@ -129,9 +165,10 @@ function Delivery() {
                     <h4>Finished deliveries</h4>
 
                     <div className='delivery-column-shipment-list'>
-                        {ships.filter(s => (s.status == "DELIVERED") || (s.status == "FAILED"))
+                        {deliveryTracking?.length && deliveryTracking[0].itemsDelivered.filter(s => (s.status.value == "DELIVERED") || (s.status.value == "FAILED"))
                             .map((ship) => (
                                 <div
+                                    key={ship.id}
                                     onClick={() => selectShipment(ship)}
                                     className={`${ship.id == selectedShipment?.id ? 'shipment-selected' : ''}`}
                                 >Shipment {ship.id}</div>
@@ -143,23 +180,24 @@ function Delivery() {
 
             <div className='card card-footer shipment-info'>
                 {selectedShipment ?
-                    <h4>Shipment {selectedShipment.id} - x item(s)</h4>
+                    <h4>Shipment {selectedShipment.id} - {selectedShipmentOrder?.items.length} item(s)</h4>
                     :
                     <h4>Select a shipment</h4>
                 }
 
                 {selectedShipment &&
                     <div className='shipment-info-details'>
-                        <p>Status: {selectedShipment.status}</p>
+                        <div>
+                            <p>Status: {selectedShipment.status.value}</p>
 
-                        <p>Created at: {formatDate(selectedShipment.createdAt)}</p>
-                        <p>Dispatched at: {formatDate(selectedShipment.dispatchedAt)}</p>
-                        <p>Delivered at: {formatDate(selectedShipment.deliveredAt)}</p>
+                            <p>Created at: {formatDate(new Date(selectedShipment.createdAt))}</p>
+                            <p>Dispatched at: {formatDate(new Date(selectedShipment?.dispatchedAt ?? ""))}</p>
+                            <p>Delivered at: {formatDate(new Date(selectedShipment?.deliveredAt ?? ""))}</p>
 
-                        {selectedShipment.status == "FAILED" &&
-                            <p>Canceled at: {formatDate(selectedShipment.failedAt)}</p>
-                        }
-
+                            {selectedShipment.status.value == "FAILED" &&
+                                <p>Canceled at: {formatDate(new Date(selectedShipment.failedAt ?? ""))}</p>
+                            }
+                        </div>
                     </div>
                 }
             </div>
