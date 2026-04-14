@@ -76,10 +76,10 @@ function Home() {
             <h3>Products</h3>
             <hr />
 
-            <div>
+            {/* <div>
                 <label htmlFor="">Search:</label>
                 <input type="text" />
-            </div>
+            </div> */}
 
             <div>
                 <div className='product-list'>
