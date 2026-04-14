@@ -218,7 +218,7 @@ function Inventory() {
     }
 
     async function creatingInventory() {
-        const payload = { ...inventoryCreation };
+        const payload = { ...inventoryCreation, location: "disabled" };
 
         try {
             const response = await createInventoryMutate(payload);
@@ -385,13 +385,13 @@ function Inventory() {
                             onChange={handleInventoryCreation}
                         />
 
-                        <InputForm
+                        {/* <InputForm
                             field='Location:'
                             type='text'
                             name='location'
                             value={inventoryCreation.location}
                             onChange={handleInventoryCreation}
-                        />
+                        /> */}
 
                         <button onClick={creatingInventory}>Create inventory</button>
                     </div>
