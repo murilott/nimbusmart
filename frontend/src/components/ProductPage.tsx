@@ -138,6 +138,7 @@ function ProductPage() {
         try {
             const response = await mutateAsync(payload);
             console.log(response);
+            navigate(`/cart`);
             // setProductCreation({ ...productCreationNew });
         } catch (err: unknown) {
             console.error("Unexpected error:", err);

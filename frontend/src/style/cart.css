@@ -17,6 +17,7 @@
     justify-content: space-between;
     border-radius: 15px;
     padding: 10px;
+    margin-bottom: 5px;
     background: linear-gradient(135deg, #e9d5ff, #f8fafc, #cbd5e1);
 }
 

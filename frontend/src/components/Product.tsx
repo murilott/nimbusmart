@@ -198,7 +198,7 @@ function Product() {
                                     <td>{product.name}</td>
                                     <td>{product.description}</td>
                                     <td>
-                                        {product.tags.value.join(",")}
+                                        {product.tags.value.join(", ")}
                                     </td>
                                 </tr>
                             ))}

@@ -75,7 +75,7 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
     const { mutateAsync, isPending } = useMutation({
         mutationFn: createTransaction,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['order'] });
+            queryClient.invalidateQueries({ queryKey: ['order', "deliveryTracking"] });
         },
     });
 
@@ -154,12 +154,19 @@ function CheckoutPopup({ toggle, dataOrder }: CheckoutPopupProps) {
                     <p>Total: {toBrl(new BigNumber(order.totalCost))}</p>
                 </div>
 
+                {isPending ??
+                    <div>
+                        Loading...
+                    </div>
+                }
+
                 <div className='popup-card-actions'>
                     <button onClick={togglePopup}>Close</button>
                     <button onClick={buy} disabled={
                         ((payment?.method.value == "DEBIT" ||
                             payment?.method.value == "PIX") && new BigNumber(order.totalCost).isGreaterThan(new BigNumber(payment?.funds) ?? 0))
                         || !payment
+                        || isPending
                     }>Buy</button>
                 </div>
             </div>
