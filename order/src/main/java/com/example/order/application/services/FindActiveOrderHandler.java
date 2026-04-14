@@ -13,13 +13,13 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-public class FindActiveOrder {
+public class FindActiveOrderHandler {
     private final OrderRepository repository;
     private final OrderMapper mapper;
 
     public OrderResponseDto handle() {
         Order order = repository.findAll().stream()
-            .filter(ord -> (ord.getDeliveredAt() == null && ord.getCancelledAt() == null))
+            .filter(ord -> (ord.getConfirmedAt() == null && ord.getCancelledAt() == null))
             .findFirst()
             .orElse(null);
         return mapper.toDto(order);

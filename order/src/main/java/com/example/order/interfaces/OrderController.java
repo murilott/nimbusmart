@@ -15,7 +15,7 @@ import com.example.order.interfaces.rest.dto.CancelOrderRequest;
 import com.example.order.interfaces.rest.dto.OrderItemCreationDto;
 import com.example.order.interfaces.rest.dto.OrderResponseDto;
 import com.example.order.application.services.CreateOrderHandler;
-import com.example.order.application.services.FindActiveOrder;
+import com.example.order.application.services.FindActiveOrderHandler;
 import com.example.order.application.commands.CancelOrderCommand;
 import com.example.order.application.services.CancelOrderHandler;
 import com.example.order.application.services.ListOrderHandler;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 public class OrderController {
     private final ListOrderHandler listOrderHandler;
-    private final FindActiveOrder findActiveOrder;
+    private final FindActiveOrderHandler findActiveOrder;
     private final CreateOrderHandler CreateOrderHandler;
     private final CancelOrderHandler CancelOrderHandler;
     

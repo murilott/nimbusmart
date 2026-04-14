@@ -34,11 +34,11 @@ public class CreateOrderItemHandler {
         //     .orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
         Order getOrder = orderRepository.findAll().stream()
-            .filter(order -> (order.getDeliveredAt() == null && order.getCancelledAt() == null))
+            .filter(order -> (order.getConfirmedAt() == null && order.getCancelledAt() == null))
             .findFirst()
             .orElse(null);
 
-        if (getOrder != null && (getOrder.getDeliveredAt() != null || getOrder.getCancelledAt() != null)) {
+        if (getOrder != null && (getOrder.getConfirmedAt() != null || getOrder.getCancelledAt() != null)) {
             log.info("Order has finished, creating another one");
             getOrder = null;
         }
