@@ -62,9 +62,19 @@ function Payment() {
     ) => {
         const { name, value } = e.target;
 
+        let finalValue: any = value;
+
+        if (name === 'method' && value) {
+            try {
+                finalValue = JSON.parse(value);
+            } catch (e) {
+                finalValue = value;
+            }
+        }
+
         setPaymentCreation((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: finalValue,
         }));
     };
 
@@ -187,9 +197,9 @@ function Payment() {
                             type='text'
                             name='method'
                             options={[
-                                { label: "Pix", value: "PIX" },
-                                { label: "Debit", value: "DEBIT" },
-                                { label: "Credit", value: "CREDIT" },
+                                { label: "Pix", value: { value: "PIX" } },
+                                { label: "Debit", value: { value: "DEBIT" } },
+                                { label: "Credit", value: { value: "CREDIT" } },
                             ]}
                             value={paymentCreation.method}
                             onChange={handlePaymentCreation}
@@ -201,8 +211,9 @@ function Payment() {
                             name='funds'
                             value={paymentCreation.funds}
                             onChange={handlePaymentCreation}
-                            disabled={(paymentCreation.method != "DEBIT")
-                                && paymentCreation.method != "PIX"
+                            disabled={
+                                paymentCreation.method.value != "DEBIT" &&
+                                paymentCreation.method.value != "PIX"
                             }
                         />
 
@@ -212,10 +223,17 @@ function Payment() {
                             name='creditLimit'
                             value={paymentCreation.creditLimit}
                             onChange={handlePaymentCreation}
-                            disabled={paymentCreation.method != "CREDIT"}
+                            disabled={paymentCreation.method.value != "CREDIT"}
                         />
 
-                        <button onClick={creatingPayment} disabled={paymentCreation.name.trim() == "" || !paymentCreation.method}>Add payment</button>
+                        <button
+                            onClick={creatingPayment}
+                            disabled={
+                                paymentCreation.name.trim() == "" ||
+                                !paymentCreation.method ||
+                                ((paymentCreation.method.value == "PIX" || paymentCreation.method.value == "DEBIT") && new BigNumber(paymentCreation.funds).isLessThanOrEqualTo(0)) ||
+                                (paymentCreation.method.value == "CREDIT" && new BigNumber(paymentCreation.creditLimit).isLessThanOrEqualTo(0))
+                            }>Add payment</button>
                     </div>
                 }
 

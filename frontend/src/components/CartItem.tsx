@@ -86,7 +86,7 @@ function CartItem({ orderItem, products, inventoryItems }: CartItemProps) {
         <div className='cart-item'>
             <div className='cart-item-info'>
                 <div className='cart-item-info-img'>
-                    <img src={product.image} alt={product.name} sizes='50' />
+                    <img src={product.image} alt={product.name} />
                 </div>
 
                 <div className='cart-item-info-name'>

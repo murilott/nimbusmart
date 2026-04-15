@@ -129,6 +129,16 @@ function ProductPage() {
     });
 
     async function addToCart() {
+        if (orderItem.quantity > inventoryItem.quantity) {
+            alert("Order quantity cannot exceed stock");
+            return;
+        }
+
+        if (orderItem.quantity <= 0) {
+            alert("Order quantity must be greater than 0");
+            return;
+        }
+
         const payload: OrderItemCreationRequest = {
             ...orderItem,
             inventoryItemId: inventoryItem.id
@@ -163,7 +173,7 @@ function ProductPage() {
                     </div>
 
                     <div className='product-page-img'>
-                        <img className='product-card-img' src="https://placehold.co/400x200" alt="Product image" width="400" height="200" />
+                        <img className='product-card-img' src={product?.image} alt="Product image" width="auto" height="400px" />
                     </div>
 
 
@@ -187,7 +197,10 @@ function ProductPage() {
                         onChange={handleOrderItem}
                     />
 
-                    <button onClick={addToCart}>Add to cart</button>
+                    <button 
+                        onClick={addToCart}
+                        disabled={orderItem.quantity <= 0 || orderItem.quantity > inventoryItem.quantity}
+                    >Add to cart</button>
                 </div>
 
             </div>

@@ -88,7 +88,7 @@ function Home() {
                     } */}
 
                     {inventoryItems?.map((item) => (
-                        <ProductCard inventoryItem={item} products={products ?? []}/>
+                        <ProductCard key={item.id} inventoryItem={item} products={products ?? []}/>
                     ))}
                 </div>
             </div>

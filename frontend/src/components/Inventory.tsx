@@ -194,6 +194,21 @@ function Inventory() {
             return;
         }
 
+        if (inventoryItemCreation.productId == null) {
+            alert("ProductId cannot be null");
+            return;
+        }
+
+        if (new BigNumber(inventoryItemCreation.price).isLessThanOrEqualTo(0)) {
+            alert("Price must be greater than 0");
+            return;
+        }
+
+        if (inventoryItemCreation.quantity <= 0) {
+            alert("Quantity must be greater than 0");
+            return;
+        }
+
         const payload: InventoryItemCreationRequest = { ...inventoryItemCreation, inventoryId: selectedInventory.id };
 
         try {
@@ -218,6 +233,13 @@ function Inventory() {
     }
 
     async function creatingInventory() {
+        if (inventoryCreation.name.trim() == "") {
+            alert("Inventory name cannot be blank");
+            return;
+        }
+
+        
+
         const payload = { ...inventoryCreation, location: "disabled" };
 
         try {
@@ -336,7 +358,14 @@ function Inventory() {
                             onChange={handleInventoryItem}
                         />
 
-                        <button onClick={creatingItem}>Add item</button>
+                        <button 
+                            onClick={creatingItem}
+                            disabled={
+                                inventoryItemCreation.productId == null ||
+                                new BigNumber(inventoryItemCreation.price).isLessThanOrEqualTo(0) ||
+                                inventoryItemCreation.quantity <= 0
+                            }
+                        >Add item</button>
                     </div>
                 }
 
@@ -393,7 +422,10 @@ function Inventory() {
                             onChange={handleInventoryCreation}
                         /> */}
 
-                        <button onClick={creatingInventory}>Create inventory</button>
+                        <button 
+                            onClick={creatingInventory}
+                            disabled={inventoryCreation.name.trim() == ""}
+                        >Create inventory</button>
                     </div>
                 }
 

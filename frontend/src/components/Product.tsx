@@ -126,6 +126,16 @@ function Product() {
     async function creatingProduct() {
         // const newTagList: string[] = productCreation.tags.split(",").map(item => item.trim().toLowerCase());
         // tags: newTagList
+        if (productCreation.name.trim() == "") {
+            alert("Product name cannot be blank");
+            return;
+        }
+
+        if (productCreation.description.trim() == "") {
+            alert("Product description cannot be blank");
+            return;
+        }
+
 
         const payload: ProductCreationRequest = { ...productCreation };
 
@@ -251,7 +261,10 @@ function Product() {
                             onChange={handleProductCreation}
                         />
 
-                        <button onClick={creatingProduct}>Add item</button>
+                        <button 
+                            onClick={creatingProduct}
+                            disabled={productCreation.name.trim() == "" || productCreation.description.trim() == ""}
+                        >Add item</button>
                     </div>
                 }
 

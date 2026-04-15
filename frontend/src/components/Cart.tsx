@@ -109,7 +109,7 @@ function Cart() {
             <div className='card'>
                 <div className='cart-item-list'>
                     {order?.items?.map((orderItem) => (
-                        <CartItem orderItem={orderItem} products={products ?? []} inventoryItems={inventoryItems ?? []} />
+                        <CartItem key={orderItem.id} orderItem={orderItem} products={products ?? []} inventoryItems={inventoryItems ?? []} />
                     ))}
                 </div>
                 <div>
@@ -128,7 +128,7 @@ function Cart() {
                     {deliveryTracking?.length == 0 &&
                         <p>No delivery items.</p>
                     }
-                    {deliveryTracking?.length && [
+                    {!!deliveryTracking?.length && [
                         ...deliveryTracking[0].itemsToDeliver, //.filter(s => s.status.value == "PENDING")
                         ...deliveryTracking[0].itemsDelivering,
                         ...deliveryTracking[0].itemsDelivered,

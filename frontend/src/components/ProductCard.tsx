@@ -56,7 +56,7 @@ function ProductCard({ inventoryItem, products }: ProductCardProps) {
 
     return (
         <div className='product-card' onClick={handleClick}>
-            <img className='product-card-img' src="https://placehold.co/150x180" alt="Product image" width="150" height="180" />
+            <img className='product-card-img' src={product?.image} alt="Product image" width="auto" height="180" />
             <h4 className='product-card-title'>{product?.name}</h4>
             <div className='product-card-desc'>
                 <span className='product-card-description'>{product?.description}</span>

@@ -213,7 +213,7 @@ function Delivery() {
                     <h4>Pending deliveries</h4>
 
                     <div className='delivery-column-shipment-list'>
-                        {deliveryTracking?.length && deliveryTracking[0].itemsToDeliver //.filter(s => s.status.value == "PENDING")
+                        {!!deliveryTracking?.length && deliveryTracking[0].itemsToDeliver //.filter(s => s.status.value == "PENDING")
                             .map((ship) => (
                                 <div
                                     key={ship.id}
@@ -224,14 +224,17 @@ function Delivery() {
                         }
                     </div>
 
-                    <button onClick={nextPending}>Get next pending shipment</button>
+                    <button 
+                        onClick={nextPending}
+                        disabled={!deliveryTracking?.length || !deliveryTracking[0].itemsToDeliver.length}
+                    >Get next pending shipment</button>
                 </div>
 
                 <div className='card card-column delivery-column'>
                     <h4>In transit deliveries</h4>
 
                     <div className='delivery-column-shipment-list'>
-                        {deliveryTracking?.length && deliveryTracking[0].itemsDelivering //.filter(s => s.status.value == "IN_TRANSIT")
+                        {!!deliveryTracking?.length && deliveryTracking[0].itemsDelivering //.filter(s => s.status.value == "IN_TRANSIT")
                             .map((ship) => (
                                 <div
                                     key={ship.id}
@@ -242,14 +245,17 @@ function Delivery() {
                         }
                     </div>
 
-                    <button onClick={deliverNext}>Deliver next shipment</button>
+                    <button 
+                        onClick={deliverNext}
+                        disabled={!deliveryTracking?.length || !deliveryTracking[0].itemsDelivering.length}
+                    >Deliver next shipment</button>
                 </div>
 
                 <div className='card card-column delivery-column'>
                     <h4>Finished deliveries</h4>
 
                     <div className='delivery-column-shipment-list'>
-                        {deliveryTracking?.length && deliveryTracking[0].itemsDelivered //.filter(s => (s.status.value == "DELIVERED") || (s.status.value == "FAILED"))
+                        {!!deliveryTracking?.length && deliveryTracking[0].itemsDelivered //.filter(s => (s.status.value == "DELIVERED") || (s.status.value == "FAILED"))
                             .map((ship) => (
                                 <div
                                     key={ship.id}
@@ -272,7 +278,7 @@ function Delivery() {
 
                 {selectedShipment &&
                     <div className='shipment-info-details'>
-                        <button onClick={() => cancel(selectedShipment)}>Cancel</button>
+                        {/* <button onClick={() => cancel(selectedShipment)}>Cancel</button> */}
                         
                         <div>
                             <p>Status: {selectedShipment.status.value}</p>
